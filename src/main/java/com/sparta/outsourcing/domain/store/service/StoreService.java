@@ -1,4 +1,40 @@
 package com.sparta.outsourcing.domain.store.service;
 
+import org.springframework.stereotype.Service;
+
+import com.sparta.outsourcing.domain.member.entity.Member;
+import com.sparta.outsourcing.domain.member.entity.MemberRole;
+import com.sparta.outsourcing.domain.member.repository.MemberRepository;
+import com.sparta.outsourcing.domain.store.dto.StoreRequestDto;
+import com.sparta.outsourcing.domain.store.dto.StoreResponseDto;
+import com.sparta.outsourcing.domain.store.entity.Store;
+import com.sparta.outsourcing.domain.store.repository.StoreRepository;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
 public class StoreService {
+
+	private final StoreRepository storeRepository;
+	private final MemberRepository memberRepository;
+
+	public StoreResponseDto createStore(String email, StoreRequestDto reqDto) {
+		Member storeOwner = memberRepository.findByEmail(email).orElseThrow(
+			() -> new IllegalArgumentException("해당하는 유저가 없습니다.")
+		);
+
+		if (!storeOwner.getRole().equals(MemberRole.OWNER)) {
+			throw new IllegalArgumentException("사장님 권한 회원만 가게를 생성할 수 있습니다.");
+		}
+
+		if (storeRepository.countAllByUser(storeOwner) == 3) {
+			throw new IllegalArgumentException("해당 사장님은 이미 3개의 가게를 소유하고 있습니다.");
+		}
+
+		Store store = Store.create(reqDto.getStoreName(), reqDto.getOpenTime(), reqDto.getCloseTime(), reqDto.getMinPrice());
+		storeRepository.save(store);
+
+		return new StoreResponseDto(store);
+	}
 }
