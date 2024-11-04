@@ -1,5 +1,7 @@
 package com.sparta.outsourcing.domain.store.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sparta.outsourcing.domain.store.dto.DetailedStoreResponseDto;
 import com.sparta.outsourcing.domain.store.dto.ShortStoreResponseDto;
 import com.sparta.outsourcing.domain.member.entity.MemberRole;
+import com.sparta.outsourcing.domain.store.dto.ShortStoreResponseDto;
 import com.sparta.outsourcing.domain.store.dto.StoreRequestDto;
 import com.sparta.outsourcing.domain.store.dto.StoreResponseDto;
 import com.sparta.outsourcing.domain.store.service.StoreService;
@@ -23,12 +26,12 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/stores")
 public class StoreController {
 
 	private final StoreService storeService;
 
-	@PostMapping("/stores")
+	@PostMapping("")
 	public ResponseEntity<StoreResponseDto> createStore(
 		@RequestBody StoreRequestDto requestDto,
 		@RequestAttribute("id") Long memberId
@@ -38,7 +41,7 @@ public class StoreController {
 		);
 	}
 
-	@GetMapping("/stores")
+	@GetMapping("")
 	public ResponseEntity<Page<ShortStoreResponseDto>> getStore(
 		@RequestParam(required = false) String storeName,
 		@RequestParam(defaultValue = "0") int page
@@ -49,7 +52,7 @@ public class StoreController {
 		return ResponseEntity.status(HttpStatus.OK).body(storeService.getAllStore(page));
 	}
 
-	@GetMapping("/stores/{storeId}")
+	@GetMapping("/{storeId}")
 	public ResponseEntity<DetailedStoreResponseDto> getOneStore(
 		@PathVariable Long storeId
 	) {

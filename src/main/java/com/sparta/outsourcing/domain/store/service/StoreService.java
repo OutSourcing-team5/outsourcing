@@ -1,5 +1,6 @@
 package com.sparta.outsourcing.domain.store.service;
 
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -55,7 +56,7 @@ public class StoreService {
 	public Page<ShortStoreResponseDto> getAllStoreByName(String storeName, int page) {
 		Pageable pageable = PageRequest.of(page, 5, Sort.by("modifiedAt").descending());
 		Page<Store> stores = storeRepository.findAllByStoreNameContaining(storeName, pageable);
-		return stores.map(store -> new ShortStoreResponseDto(store.getId(), store.getStoreName()));
+		return stores.map(this::toShortStoreResponseDto);
 	}
 
 	public Page<ShortStoreResponseDto> getAllStore(int page) {
