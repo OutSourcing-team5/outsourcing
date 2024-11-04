@@ -50,16 +50,17 @@ public class Store extends TimeStamped {
 
 
 
-	private Store(String storeName, Time openTime, Time closeTime, int minPrice) {
+	private Store(String storeName, Time openTime, Time closeTime, int minPrice, Member member) {
 		this.storeName = storeName;
 		this.openTime = openTime;
 		this.closeTime = closeTime;
 		this.minPrice = minPrice;
 		this.isOpened = false;
 		this.isDeleted = false;
+		this.member = member;
 	}
 
-	public static Store create(String storeName, Time openTime, Time closeTime, int minPrice) {
-		return new Store(storeName, openTime, closeTime, minPrice);
+	public static Store createOf(String storeName, Time openTime, Time closeTime, int minPrice, Member member) {
+		return new Store(storeName, openTime, closeTime, minPrice, member);
 	}
 }
