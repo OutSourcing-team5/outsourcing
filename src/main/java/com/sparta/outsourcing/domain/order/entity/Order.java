@@ -17,6 +17,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -53,4 +54,8 @@ public class Order extends TimeStamped {
 	public static Order createOf(Member member, Store store, Menu menu) {
 		return new Order(member, store, menu);
 	}
+
+	@Setter //Lombok 기본 세팅이라 이렇게 처리
+	private OrderStatus Status;
+
 }

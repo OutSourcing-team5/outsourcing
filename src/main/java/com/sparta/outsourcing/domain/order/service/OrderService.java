@@ -12,6 +12,8 @@ import com.sparta.outsourcing.domain.menu.repository.MenuRepository;
 import com.sparta.outsourcing.domain.order.dto.OrderRequestDto;
 import com.sparta.outsourcing.domain.order.dto.OrderResponseDto;
 import com.sparta.outsourcing.domain.order.entity.Order;
+import com.sparta.outsourcing.domain.order.entity.OrderStatus;
+import com.sparta.outsourcing.domain.order.dto.OrderStatusRequestDto;
 import com.sparta.outsourcing.domain.order.repository.OrderRepository;
 import com.sparta.outsourcing.domain.store.entity.Store;
 import com.sparta.outsourcing.domain.store.repository.StoreRepository;
@@ -62,5 +64,39 @@ public class OrderService {
 		orderRepository.save(order);
 
 		return new OrderResponseDto(order);
+	}
+	@Transactional
+	public OrderResponseDto updateOrderStatus(OrderStatusRequestDto statusRequestDto, Long memberId) {
+		Order order = orderRepository.findById(statusRequestDto.getOrderId()).orElseThrow(
+			()-> new IllegalArgumentException("해당 주문을 찾을 수 없습니다.")
+		);
+		// 권한 확인
+		if (!order.getMember().getId().equals(memberId)) {
+			throw new IllegalArgumentException("권한이 없습니다.");
+		}
+		// 주문 상태 전환 유효성 검사 -> 기본값이 pending
+		String currentStatus = order.getStatus().name();
+		String requestedStatus = statusRequestDto.getOrderStatus();
+
+		if ("PENDING".equals(currentStatus) && !"ACCEPTED".equals(requestedStatus) && !"REJECTED".equals(requestedStatus)) {
+			throw new IllegalArgumentException("대기중인 주문만 거절 가능합니다.");
+		}
+
+		if ("COMPLETED".equals(currentStatus) && !"COMPLETED".equals(requestedStatus)) {
+			throw new IllegalArgumentException("수락된 주문만 완료 가능합니다.");
+		}
+
+		if ("ACCEPTED".equals(currentStatus) && !"COMPLETED".equals(requestedStatus)) {
+			throw new IllegalArgumentException("대기중인 주문만 수락 가능합니다.");
+		}
+
+		// 상태 업데이트
+		order.setStatus(OrderStatus.valueOf(requestedStatus));
+		orderRepository.save(order);
+
+		// 업데이트된 주문 정보를 포함한 응답 반환
+		return new OrderResponseDto(order);
+
+
 	}
 }
