@@ -59,7 +59,7 @@ public class StoreController {
 		return ResponseEntity.status(HttpStatus.OK).body(storeService.getOneStore(storeId));
 	}
 
-	@PutMapping("/{storeId")
+	@PutMapping("/{storeId}")
 	public ResponseEntity<StoreResponseDto> updateStore(
 		@PathVariable Long storeId,
 		@Valid @RequestBody StoreUpdateRequestDto requestDto,

@@ -105,4 +105,21 @@ public class OrderService {
 		// 업데이트된 주문 정보를 포함한 응답 반환
 		return new OrderResponseDto(order);
 	}
+
+	public void deleteOrder(Long orderId, Long memberId) {
+		Order order = orderRepository.findById(orderId).orElseThrow(()
+			->new IllegalArgumentException("해당 주문을 찾을 수 없습니다. "));
+
+		// 권한 확인 : 주문한 사용자만 취소할 수 있도록 설정
+		if (!order.getMember().getId().equals(memberId)) {
+			throw new IllegalArgumentException(" 해당 주문을 취소할 권한이 없습니다.");
+		}
+
+		// 주문 상태가 완료되었는지 확인하고 완료된 주문은 취소 불가능하게 설정
+		if(order.getStatus() == OrderStatus.COMPLETED) {
+			throw new IllegalArgumentException("완료된 주문은 취소할 수 없습니다.");
+		}
+		//소프트 삭제 수행
+		order.delete();
+	}
 }
