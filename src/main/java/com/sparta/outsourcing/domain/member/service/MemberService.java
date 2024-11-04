@@ -55,7 +55,6 @@ public class MemberService {
         return new MemberResponseDto(member);
     }
 
-    @Transactional
 	public void login(LoginRequestDto requestDto, HttpServletResponse response) {
         String email = requestDto.getEmail();
         String password = requestDto.getPassword();

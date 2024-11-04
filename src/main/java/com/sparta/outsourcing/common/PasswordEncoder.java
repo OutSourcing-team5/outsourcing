@@ -7,7 +7,7 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 @Component
 public class PasswordEncoder {
 	public static boolean verifyPassword(String password) {
-		return password.matches("((?=.*[a-z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,})");
+		return password.matches("((?=.*[a-z])(?=.*[0-9])(?=.*[^a-zA-Z0-9])(?=.*[~!@#$%^&*()+|=])[A-Za-z\\d~!@#$%^&*()+|=].{8,})");
 	}
 
 	public String encode(String password) {
