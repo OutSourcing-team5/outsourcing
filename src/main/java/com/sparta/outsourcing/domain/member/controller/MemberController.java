@@ -1,6 +1,7 @@
 package com.sparta.outsourcing.domain.member.controller;
 
 import com.sparta.outsourcing.common.filter.AuthFilter;
+import com.sparta.outsourcing.domain.member.dto.DeleteMemberRequestDto;
 import com.sparta.outsourcing.domain.member.dto.MemberRequestDto;
 import com.sparta.outsourcing.domain.member.dto.MemberResponseDto;
 import com.sparta.outsourcing.domain.member.service.MemberService;
@@ -9,7 +10,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -27,9 +31,19 @@ public class MemberController {
     public ResponseEntity<MemberResponseDto> signup(@RequestBody MemberRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(memberService.signup(requestDto));
     }
+
     @PostMapping("/auth/login")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void login(@RequestBody MemberRequestDto requestDto, HttpServletResponse response) {
         memberService.login(requestDto, response);
+    }
+
+    @DeleteMapping("/members/{memberId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMember(
+        @RequestBody DeleteMemberRequestDto requestDto,
+        @RequestAttribute("id") Long memberId
+    ) {
+        memberService.deleteMember(requestDto, memberId);
     }
 }

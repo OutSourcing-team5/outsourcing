@@ -1,25 +1,36 @@
 package com.sparta.outsourcing.domain.member.service;
 
+import java.util.List;
 import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sparta.outsourcing.common.JwtUtil;
 import com.sparta.outsourcing.common.PasswordEncoder;
+import com.sparta.outsourcing.domain.member.dto.DeleteMemberRequestDto;
 import com.sparta.outsourcing.domain.member.dto.MemberRequestDto;
 import com.sparta.outsourcing.domain.member.dto.MemberResponseDto;
 import com.sparta.outsourcing.domain.member.entity.Member;
 import com.sparta.outsourcing.domain.member.repository.MemberRepository;
-
+import com.sparta.outsourcing.domain.menu.entity.Menu;
+import com.sparta.outsourcing.domain.menu.repository.MenuRepository;
+import com.sparta.outsourcing.domain.order.entity.Order;
+import com.sparta.outsourcing.domain.order.repository.OrderRepository;
+import com.sparta.outsourcing.domain.store.entity.Store;
+import com.sparta.outsourcing.domain.store.repository.StoreRepository;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final StoreRepository storeRepository;
+    private final MenuRepository menuRepository;
+    private final OrderRepository orderRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
 
@@ -55,5 +66,35 @@ public class MemberService {
         }
         String token = jwtUtil.createToken(member.getEmail());
         jwtUtil.addJwtToCookie(token, response);
+	}
+
+	public void deleteMember(DeleteMemberRequestDto requestDto, Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(
+            () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
+        );
+
+        if (!passwordEncoder.matches(requestDto.getOldPassword(), member.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        if (member.isDeleted()) {
+            throw new IllegalArgumentException("이미 삭제된 회원입니다.");
+        }
+
+        member.delete();
+
+        List<Store> stores = storeRepository.findAllByMember(member);
+        stores.forEach(store -> {
+            List<Menu> menus = menuRepository.findAllByStore(store);
+            menus.forEach(Menu::delete);
+            menuRepository.saveAll(menus);
+            store.delete();
+            }
+        );
+        storeRepository.saveAll(stores);
+
+        List<Order> orders = orderRepository.findAllByMember(member);
+        orders.forEach(Order::delete);
+        orderRepository.saveAll(orders);
 	}
 }

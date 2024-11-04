@@ -44,15 +44,22 @@ public class Order extends TimeStamped {
 	@JoinColumn(name = "menu_id", nullable = false)
 	private Menu menu;
 
+	private boolean isDeleted;
+
 	// 주문 생성자: 필수 필드 초기화
 	private Order(Member member, Store store, Menu menu) {
 		this.member = member;
 		this.store = store;
 		this.menu = menu;
 		this.status = OrderStatus.PENDING;
+		this.isDeleted = false;
 	}
 
 	public static Order createOf(Member member, Store store, Menu menu) {
 		return new Order(member, store, menu);
+	}
+
+	public void delete() {
+		this.isDeleted = true;
 	}
 }
