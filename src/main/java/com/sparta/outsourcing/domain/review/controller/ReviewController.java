@@ -46,7 +46,7 @@ public class ReviewController {
 		return ResponseEntity.status(HttpStatus.OK).body(reviewService.updateReview(reviewId, requestDto, memberId));
 	}
 
-	//리뷰 삭제로직
+	//리뷰 삭제
 	@DeleteMapping("/{reviewId}")
 	public ResponseEntity<Void> deleteReview(
 		@PathVariable Long reviewId,
