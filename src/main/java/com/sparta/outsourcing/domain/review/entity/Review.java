@@ -47,4 +47,8 @@ public class Review extends TimeStamped {
 	public static Review createOf(int rating) {
 		return new Review(rating);
 	}
+
+	public void update(int rating) {
+		this.rating=rating;
+	}
 }

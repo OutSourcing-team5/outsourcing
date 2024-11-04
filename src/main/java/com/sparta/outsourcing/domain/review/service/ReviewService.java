@@ -9,9 +9,11 @@ import com.sparta.outsourcing.domain.order.entity.OrderStatus;
 import com.sparta.outsourcing.domain.order.repository.OrderRepository;
 import com.sparta.outsourcing.domain.review.dto.ReviewRequestDto;
 import com.sparta.outsourcing.domain.review.dto.ReviewResponseDto;
+import com.sparta.outsourcing.domain.review.dto.ReviewUpdateRequestDto;
 import com.sparta.outsourcing.domain.review.entity.Review;
 import com.sparta.outsourcing.domain.review.repository.ReviewRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -42,5 +44,20 @@ public class ReviewService {
 		}
 		Review newReview = Review.createOf(requestDto.getRating());
 		return new ReviewResponseDto(newReview);
+	}
+
+	@Transactional
+	public ReviewResponseDto updateReview(Long reviewId, ReviewUpdateRequestDto requestDto, Long memberId) {
+		if (requestDto.getRating() < 1 || requestDto.getRating() > 5) {
+			throw new IllegalArgumentException("점수는 1 에서 5 사이 숫자에서 골라주세요.");
+		}
+		Review review = reviewRepository.findById(reviewId).orElseThrow(
+			() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다.")
+		);
+		if (!review.getOrder().getMember().getId().equals(memberId)) {
+			throw new IllegalArgumentException("리뷰를 수정할 권한이 없습니다.");
+		}
+		review.update(requestDto.getRating());
+		return new ReviewResponseDto(review);
 	}
 }
