@@ -26,7 +26,7 @@ public class MenuService {
 
 		//권한이 없습니다(가게는 사장님만 생성 가능해서 사장님일때 생성 가능한 검사 삭제)
 		if(!currentMemberId.equals(store.getMember().getId())) {
-			throw new IllegalArgumentException("권한이 없습니다");
+			throw new IllegalArgumentException("메뉴는 사장님만 생성 가능합니다");
 		}
 
 		// 폐업한 가게인지 확인
