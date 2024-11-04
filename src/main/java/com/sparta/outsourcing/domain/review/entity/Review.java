@@ -2,6 +2,8 @@ package com.sparta.outsourcing.domain.review.entity;
 
 import com.sparta.outsourcing.domain.TimeStamped;
 import com.sparta.outsourcing.domain.order.entity.Order;
+import com.sparta.outsourcing.domain.review.dto.ReviewRequestDto;
+import com.sparta.outsourcing.domain.review.dto.ReviewResponseDto;
 import com.sparta.outsourcing.domain.store.entity.Store;
 
 import jakarta.persistence.Column;
@@ -14,6 +16,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -36,4 +39,12 @@ public class Review extends TimeStamped {
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "orderId", nullable = false)
 	private Order order;
+
+	private Review(int rating) {
+		this.rating = rating;
+	}
+
+	public static Review createOf(int rating) {
+		return new Review(rating);
+	}
 }
