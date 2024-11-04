@@ -24,11 +24,11 @@ public class StoreController {
 
 	@PostMapping("/stores")
 	public ResponseEntity<StoreResponseDto> createStore(
-		@RequestBody StoreRequestDto reqDto,
+		@RequestBody StoreRequestDto requestDto,
 		@RequestAttribute("email") String email
 	) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(
-			storeService.createStore(email, reqDto)
+			storeService.createStore(email, requestDto)
 		);
 	}
 }
