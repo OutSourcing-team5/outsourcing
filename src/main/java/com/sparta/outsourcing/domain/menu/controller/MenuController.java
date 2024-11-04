@@ -1,10 +1,8 @@
 package com.sparta.outsourcing.domain.menu.controller;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -12,15 +10,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sparta.outsourcing.domain.member.entity.MemberRole;
-import com.sparta.outsourcing.domain.menu.dto.MenuCreateDto;
+import com.sparta.outsourcing.domain.menu.dto.MenuRequestDto;
 import com.sparta.outsourcing.domain.menu.dto.MenuResponseDto;
 import com.sparta.outsourcing.domain.menu.service.MenuService;
 
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 
 @RestController
 @RequestMapping("/api/menus")
@@ -30,12 +25,22 @@ public class MenuController {
 
 	@PostMapping("")
 	public ResponseEntity<MenuResponseDto> createMenu(
-		@Valid @RequestBody MenuCreateDto menuCreateDto,
-		@RequestAttribute("role") MemberRole currentMemberRole,
+		@Valid @RequestBody MenuRequestDto menuRequestDto,
 		@RequestAttribute("id") Long currentMemberId
 	) {
-		MenuResponseDto menuResponseDto = menuService.createMenu(menuCreateDto, currentMemberRole, currentMemberId);
+		MenuResponseDto menuResponseDto = menuService.createMenu(menuRequestDto, currentMemberId);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(menuResponseDto);
+	}
+
+	@PutMapping("/{menuId}")
+	public ResponseEntity<MenuResponseDto> updateMenu(
+		@PathVariable Long menuId,
+		@Valid @RequestBody MenuRequestDto menuRequestDto,
+		@RequestAttribute("id") Long currentMemberId
+	) {
+		MenuResponseDto menuResponseDto = menuService.updateMenu(menuId, menuRequestDto, currentMemberId);
+
+		return ResponseEntity.status(HttpStatus.OK).body(menuResponseDto);
 	}
 }
