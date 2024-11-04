@@ -2,8 +2,7 @@ package com.sparta.outsourcing.domain.menu.service;
 
 import org.springframework.stereotype.Service;
 
-import com.sparta.outsourcing.domain.member.entity.MemberRole;
-import com.sparta.outsourcing.domain.menu.dto.MenuCreateDto;
+import com.sparta.outsourcing.domain.menu.dto.MenuRequestDto;
 import com.sparta.outsourcing.domain.menu.dto.MenuResponseDto;
 import com.sparta.outsourcing.domain.menu.entity.Menu;
 import com.sparta.outsourcing.domain.menu.repository.MenuRepository;
@@ -20,13 +19,13 @@ public class MenuService {
 	private final StoreRepository storeRepository;
 	private final MenuRepository menuRepository;
 
-	public MenuResponseDto createMenu(@Valid MenuCreateDto menuCreateDto, MemberRole currentMemberRole, Long currentMemberId) {
+	public MenuResponseDto createMenu(@Valid MenuRequestDto menuRequestDto, Long currentMemberId) {
 
 		//가게가 없습니다
-		Store store = storeRepository.findById(menuCreateDto.getStoreId()).orElseThrow(() -> new IllegalArgumentException("해당 가게가 없습니다"));
+		Store store = storeRepository.findById(menuRequestDto.getStoreId()).orElseThrow(() -> new IllegalArgumentException("해당 가게가 없습니다"));
 
-		//권한이 없습니다
-		if(!currentMemberRole.equals(MemberRole.OWNER) && currentMemberId.equals(store.getId())) {
+		//권한이 없습니다(가게는 사장님만 생성 가능해서 사장님일때 생성 가능한 검사 삭제)
+		if(!currentMemberId.equals(store.getMember().getId())) {
 			throw new IllegalArgumentException("권한이 없습니다");
 		}
 
@@ -35,8 +34,31 @@ public class MenuService {
 			throw new IllegalArgumentException("폐업한 가게입니다");
 		}
 
-		//Menu menu = new Menu(menuCreateDto, store);
-		Menu menu = Menu.createOf(menuCreateDto.getMenuName(), menuCreateDto.getPrice(), store);
+		//Menu menu = new Menu(menuRequestDto, store);
+		Menu menu = Menu.createOf(menuRequestDto.getMenuName(), menuRequestDto.getPrice(), store);
+		return new MenuResponseDto(menuRepository.save(menu));
+	}
+
+	public MenuResponseDto updateMenu(Long menuId, @Valid MenuRequestDto menuRequestDto, Long currentMemberId) {
+		Menu menu = menuRepository.findById(menuId).orElseThrow(() -> new IllegalArgumentException("해당 메뉴가 없습니다"));
+		Store store = storeRepository.findById(menuRequestDto.getStoreId()).orElseThrow(() -> new IllegalArgumentException("해당 가게가 없습니다"));
+
+		//폐업한 가게입니다
+		if (store.isDeleted()) {
+			throw new IllegalArgumentException("폐업한 가게입니다");
+		}
+
+		//권한이 없습니다
+		if(!store.getMember().getId().equals(currentMemberId)) {
+			throw new IllegalArgumentException("권한이 없습니다");
+		}
+
+		//삭제된 메뉴입니다
+		if(menu.isDeleted()) {
+			throw new IllegalArgumentException("이미 삭제된 메뉴입니다");
+		}
+
+		Menu.updateOf(menuRequestDto.getMenuName(), menuRequestDto.getPrice(), store);
 		return new MenuResponseDto(menuRepository.save(menu));
 	}
 }

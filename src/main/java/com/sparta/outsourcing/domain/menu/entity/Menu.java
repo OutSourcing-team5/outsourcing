@@ -1,7 +1,6 @@
 package com.sparta.outsourcing.domain.menu.entity;
 
 import com.sparta.outsourcing.domain.TimeStamped;
-import com.sparta.outsourcing.domain.menu.dto.MenuCreateDto;
 import com.sparta.outsourcing.domain.store.entity.Store;
 
 import jakarta.persistence.Column;
@@ -13,6 +12,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -46,6 +47,10 @@ public class Menu extends TimeStamped {
 	}
 
 	public static Menu createOf(String menuName, int price, Store store) {
+		return new Menu(menuName, price, store);
+	}
+
+	public static Menu updateOf(String menuName, int price, Store store) {
 		return new Menu(menuName, price, store);
 	}
 }
