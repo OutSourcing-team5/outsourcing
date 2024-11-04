@@ -5,6 +5,7 @@ import com.sparta.outsourcing.domain.member.entity.Member;
 import com.sparta.outsourcing.domain.menu.entity.Menu;
 import com.sparta.outsourcing.domain.store.entity.Store;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -44,6 +45,7 @@ public class Order extends TimeStamped {
 	@JoinColumn(name = "menu_id", nullable = false)
 	private Menu menu;
 
+	@Column(nullable = false)
 	private boolean isDeleted;
 
 	// 주문 생성자: 필수 필드 초기화
