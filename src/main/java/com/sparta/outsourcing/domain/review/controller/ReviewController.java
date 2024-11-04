@@ -13,6 +13,7 @@ import com.sparta.outsourcing.domain.review.dto.ReviewResponseDto;
 import com.sparta.outsourcing.domain.review.entity.Review;
 import com.sparta.outsourcing.domain.review.service.ReviewService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -23,7 +24,7 @@ public class ReviewController {
 
 	@PostMapping
 	public ResponseEntity<ReviewResponseDto> createReview(
-		@RequestBody ReviewRequestDto requestDto,
+		@RequestBody @Valid ReviewRequestDto requestDto,
 		@RequestAttribute("id") Long memberId
 	)
 	{
