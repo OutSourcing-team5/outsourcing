@@ -17,6 +17,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -28,6 +29,7 @@ public class Order extends TimeStamped {
 	private Long id;
 
 	@Enumerated(EnumType.STRING)
+	@Setter
 	private OrderStatus status;
 
 	@ManyToOne(fetch = FetchType.LAZY)

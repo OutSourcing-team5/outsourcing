@@ -12,6 +12,8 @@ import com.sparta.outsourcing.domain.menu.repository.MenuRepository;
 import com.sparta.outsourcing.domain.order.dto.OrderRequestDto;
 import com.sparta.outsourcing.domain.order.dto.OrderResponseDto;
 import com.sparta.outsourcing.domain.order.entity.Order;
+import com.sparta.outsourcing.domain.order.entity.OrderStatus;
+import com.sparta.outsourcing.domain.order.dto.OrderStatusRequestDto;
 import com.sparta.outsourcing.domain.order.repository.OrderRepository;
 import com.sparta.outsourcing.domain.store.entity.Store;
 import com.sparta.outsourcing.domain.store.repository.StoreRepository;
@@ -61,6 +63,46 @@ public class OrderService {
 		Order order = Order.createOf(member, store, menu);
 		orderRepository.save(order);
 
+		return new OrderResponseDto(order);
+	}
+	@Transactional
+	public OrderResponseDto updateOrderStatus(OrderStatusRequestDto statusRequestDto, Long memberId) {
+		Order order = orderRepository.findById(statusRequestDto.getOrderId()).orElseThrow(
+			()-> new IllegalArgumentException("해당 주문을 찾을 수 없습니다.")
+		);
+		// 권한 확인
+		if (!order.getMember().getId().equals(memberId)) {
+			throw new IllegalArgumentException("권한이 없습니다.");
+		}
+
+		// 주문 상태 유효성 검사
+		String currentStatus = order.getStatus().name();
+		String requestedStatus = statusRequestDto.getOrderStatus();
+
+		// 대기 상태로 바꾸는 요청: 바로 예외처리
+		if (requestedStatus.equals("PENDING")) {
+			throw new IllegalArgumentException("대기 상태로 변경할 수 없습니다.");
+		}
+
+		// 수락 상태로 바꾸는 요청: 대기가 아니면 언제나 예외처리
+		if (requestedStatus.equals("ACCEPTED") && !currentStatus.equals("PENDING")) {
+			throw new IllegalArgumentException("대기 상태가 아니면 수락 상태로 변경할 수 없습니다.");
+		}
+
+		// 거절 상태로 바꾸는 요청: 대기가 아니면 언제나 예외처리
+		if (requestedStatus.equals("REJECTED") && currentStatus.equals("PENDING")) {
+			throw new IllegalArgumentException("대기 상태가 아니면 거절 상태로 변경할 수 없습니다.");
+		}
+
+		//완료 상태로 바꾸는 요청: 수락이 아니면 언제나 예외처리
+		if (requestedStatus.equals("COMPLETED") && currentStatus.equals("ACCEPTED")) {
+			throw new IllegalArgumentException("수락 상태가 아니면 완료 상태로 변경할 수 없습니다.");
+		}
+		// 상태 업데이트
+		order.setStatus(OrderStatus.valueOf(requestedStatus));
+		orderRepository.save(order);
+
+		// 업데이트된 주문 정보를 포함한 응답 반환
 		return new OrderResponseDto(order);
 	}
 }
