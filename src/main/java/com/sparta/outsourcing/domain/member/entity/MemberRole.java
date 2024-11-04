@@ -1,8 +1,8 @@
 package com.sparta.outsourcing.domain.member.entity;
 
 public enum MemberRole {
-	USER(Authority.USER),  // 사용자 권한
-	OWNER(Authority.OWNER);  // 사장님 권한
+	USER(Authority.USER),
+	OWNER(Authority.OWNER);
 
 	private final String authority;
 

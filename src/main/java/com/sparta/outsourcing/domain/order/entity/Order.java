@@ -41,4 +41,16 @@ public class Order extends TimeStamped {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "menuId", nullable = false)
 	private Menu menu;
+
+	// 주문 생성자: 필수 필드 초기화
+	private Order(Member member, Store store, Menu menu) {
+		this.member = member;
+		this.store = store;
+		this.menu = menu;
+		this.status = OrderStatus.PENDING;
+	}
+
+	public static Order createOf(Member member, Store store, Menu menu) {
+		return new Order(member, store, menu);
+	}
 }
