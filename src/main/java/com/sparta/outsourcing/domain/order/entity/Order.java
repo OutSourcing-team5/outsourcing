@@ -48,7 +48,6 @@ public class Order extends TimeStamped {
 	@Column(nullable = false)
 	private boolean isDeleted;
 
-
 	// 주문 생성자: 필수 필드 초기화
 	private Order(Member member, Store store, Menu menu) {
 		this.member = member;

@@ -40,15 +40,22 @@ public class Member extends TimeStamped {
 	@Enumerated(EnumType.STRING)
 	private MemberRole role;
 
+	private boolean isDeleted;
+
 	private Member(String username, String password, String email, String address, MemberRole role) {
 		this.username = username;
 		this.password = password;
 		this.email = email;
 		this.address = address;
 		this.role = role;
+		this.isDeleted = false;
 	}
 
 	public static Member createOf(String username, String password, String email, String address, MemberRole role) {
 		return new Member(username, password, email, address, role);
+	}
+
+	public void delete() {
+		isDeleted = true;
 	}
 }
