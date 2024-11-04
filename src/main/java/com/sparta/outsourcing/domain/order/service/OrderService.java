@@ -6,21 +6,17 @@ import java.time.LocalTime;
 import org.springframework.stereotype.Service;
 
 import com.sparta.outsourcing.domain.member.entity.Member;
-import com.sparta.outsourcing.domain.member.entity.MemberRole;
 import com.sparta.outsourcing.domain.member.repository.MemberRepository;
 import com.sparta.outsourcing.domain.menu.entity.Menu;
 import com.sparta.outsourcing.domain.menu.repository.MenuRepository;
-import com.sparta.outsourcing.domain.menu.service.MenuService;
 import com.sparta.outsourcing.domain.order.dto.OrderRequestDto;
 import com.sparta.outsourcing.domain.order.dto.OrderResponseDto;
 import com.sparta.outsourcing.domain.order.entity.Order;
-import com.sparta.outsourcing.domain.order.entity.OrderStatus;
 import com.sparta.outsourcing.domain.order.repository.OrderRepository;
 import com.sparta.outsourcing.domain.store.entity.Store;
 import com.sparta.outsourcing.domain.store.repository.StoreRepository;
 
 import jakarta.transaction.Transactional;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Service

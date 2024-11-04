@@ -31,15 +31,15 @@ public class Order extends TimeStamped {
 	private OrderStatus status;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "storeId", nullable = false)
+	@JoinColumn(name = "store_id", nullable = false)
 	private Store store;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "memberId", nullable = false)
+	@JoinColumn(name = "member_id", nullable = false)
 	private Member member;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "menuId", nullable = false)
+	@JoinColumn(name = "menu_id", nullable = false)
 	private Menu menu;
 
 	// 주문 생성자: 필수 필드 초기화
