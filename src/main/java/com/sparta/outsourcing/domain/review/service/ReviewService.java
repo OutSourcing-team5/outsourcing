@@ -30,7 +30,7 @@ public class ReviewService {
 		Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(
 			() -> new IllegalArgumentException("해당 멤버가 존재하지 않습니다.")
 		);
-		if(order.getStatus().equals(OrderStatus.COMPLETED)) {
+		if(!order.getStatus().equals(OrderStatus.COMPLETED)) {
 			throw new IllegalArgumentException("주문이 배달 완료 상태가 아닙니다.");
 		}
 		if(reviewRepository.findByOrderId(requestDto.getOrderId()).isPresent()) {
