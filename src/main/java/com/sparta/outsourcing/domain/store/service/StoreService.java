@@ -46,7 +46,7 @@ public class StoreService {
 			throw new IllegalArgumentException("사장님 권한 회원만 가게를 생성할 수 있습니다.");
 		}
 
-		if (storeRepository.countAllByMemberAndIsDeletedFalse(storeOwner) == 3) {
+		if (storeRepository.countActiveStoresByMember(storeOwner) == 3) {
 			throw new IllegalArgumentException("해당 사장님은 이미 3개의 가게를 소유하고 있습니다.");
 		}
 
@@ -58,13 +58,13 @@ public class StoreService {
 
 	public Page<ShortStoreResponseDto> getAllStoreByName(String storeName, int page) {
 		Pageable pageable = PageRequest.of(page, 5, Sort.by("modifiedAt").descending());
-		Page<Store> stores = storeRepository.findAllByStoreNameContaining(storeName, pageable);
+		Page<Store> stores = storeRepository.findAllByStoreNameContainingAndIsDeletedFalse(storeName, pageable);
 		return stores.map(store -> new ShortStoreResponseDto(store.getId(), store.getStoreName()));
 	}
 
 	public Page<ShortStoreResponseDto> getAllStore(int page) {
 		Pageable pageable = PageRequest.of(page, 5, Sort.by("modifiedAt").descending());
-		Page<Store> stores = storeRepository.findAll(pageable);
+		Page<Store> stores = storeRepository.findAllAndIsDeletedFalse(pageable);
 		return stores.map(store -> new ShortStoreResponseDto(store.getId(), store.getStoreName()));
 	}
 
@@ -74,10 +74,10 @@ public class StoreService {
 		);
 
 		Pageable menuPageable = PageRequest.of(0, 5, Sort.by("modifiedAt").descending());
-		Page<Menu> menus = menuRepository.findAllByStoreContaining(store, menuPageable);
+		Page<Menu> menus = menuRepository.findAllByActiveStore(store, menuPageable);
 
 		Pageable reviewPageable = PageRequest.of(0, 5, Sort.by("modifiedAt").descending());
-		Page<Review> reviews = reviewRepository.findAllByStoreContaining(store, reviewPageable);
+		Page<Review> reviews = reviewRepository.findAllByActiveStore(store, reviewPageable);
 
 		return new DetailedStoreResponseDto(
 			store,
@@ -127,7 +127,7 @@ public class StoreService {
 
 		store.delete();
 
-		List<Menu> menus = menuRepository.findAllByStore(store);
+		List<Menu> menus = menuRepository.findAllByActiveStore(store);
 		menus.forEach(Menu::delete);
 		menuRepository.saveAll(menus);
 	}

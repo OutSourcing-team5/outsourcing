@@ -83,9 +83,9 @@ public class MemberService {
 
         member.delete();
 
-        List<Store> stores = storeRepository.findAllByMember(member);
+        List<Store> stores = storeRepository.findAllByActiveMember(member);
         stores.forEach(store -> {
-            List<Menu> menus = menuRepository.findAllByStore(store);
+            List<Menu> menus = menuRepository.findAllByActiveStore(store);
             menus.forEach(Menu::delete);
             menuRepository.saveAll(menus);
             store.delete();
@@ -93,7 +93,7 @@ public class MemberService {
         );
         storeRepository.saveAll(stores);
 
-        List<Order> orders = orderRepository.findAllByMember(member);
+        List<Order> orders = orderRepository.findAllByActiveMember(member);
         orders.forEach(Order::delete);
         orderRepository.saveAll(orders);
 	}
