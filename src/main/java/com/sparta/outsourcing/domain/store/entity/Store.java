@@ -1,9 +1,12 @@
 package com.sparta.outsourcing.domain.store.entity;
 
 import java.sql.Time;
+import java.time.LocalDate;
+import java.util.List;
 
 import com.sparta.outsourcing.domain.TimeStamped;
 import com.sparta.outsourcing.domain.member.entity.Member;
+import com.sparta.outsourcing.domain.order.entity.Order;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -48,6 +52,8 @@ public class Store extends TimeStamped {
 	@JoinColumn(name = "member_id", nullable = false)
 	private Member member;
 
+	@OneToMany(mappedBy = "store")
+	private List<Order> orders;
 
 
 	private Store(String storeName, Time openTime, Time closeTime, int minPrice, Member member) {

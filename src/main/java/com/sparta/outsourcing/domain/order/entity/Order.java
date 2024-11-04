@@ -3,6 +3,7 @@ package com.sparta.outsourcing.domain.order.entity;
 import com.sparta.outsourcing.domain.TimeStamped;
 import com.sparta.outsourcing.domain.member.entity.Member;
 import com.sparta.outsourcing.domain.menu.entity.Menu;
+import com.sparta.outsourcing.domain.review.entity.Review;
 import com.sparta.outsourcing.domain.store.entity.Store;
 
 import jakarta.persistence.Entity;
@@ -14,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,6 +43,9 @@ public class Order extends TimeStamped {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "menu_id", nullable = false)
 	private Menu menu;
+
+	@OneToOne(mappedBy = "order")
+	private Review review;
 
 	// 주문 생성자: 필수 필드 초기화
 	private Order(Member member, Store store, Menu menu) {
