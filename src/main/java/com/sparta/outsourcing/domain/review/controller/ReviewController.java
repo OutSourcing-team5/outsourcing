@@ -2,14 +2,18 @@ package com.sparta.outsourcing.domain.review.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sparta.outsourcing.domain.review.dto.ReviewRequestDto;
 import com.sparta.outsourcing.domain.review.dto.ReviewResponseDto;
+import com.sparta.outsourcing.domain.review.dto.ReviewUpdateRequestDto;
 import com.sparta.outsourcing.domain.review.service.ReviewService;
 
 import jakarta.validation.Valid;
@@ -21,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class ReviewController {
 	private final ReviewService reviewService;
 
+	//리뷰 생성
 	@PostMapping
 	public ResponseEntity<ReviewResponseDto> createReview(
 		@RequestBody @Valid ReviewRequestDto requestDto,
@@ -29,5 +34,15 @@ public class ReviewController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(
 			reviewService.createReview(requestDto, memberId)
 		);
+	}
+
+	//리뷰 수정
+	@PutMapping("/{reviewId}")
+	public ResponseEntity<ReviewResponseDto> updateReview(
+		@PathVariable Long reviewId,
+		@RequestBody ReviewUpdateRequestDto requestDto,
+		@RequestAttribute("id") Long memberId
+	) {
+		return ResponseEntity.status(HttpStatus.OK).body(reviewService.updateReview(reviewId, requestDto, memberId));
 	}
 }
