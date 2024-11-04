@@ -43,6 +43,11 @@ public class MenuService {
 		Menu menu = menuRepository.findById(menuId).orElseThrow(() -> new IllegalArgumentException("해당 메뉴가 없습니다"));
 		Store store = storeRepository.findById(menuRequestDto.getStoreId()).orElseThrow(() -> new IllegalArgumentException("해당 가게가 없습니다"));
 
+		//storeID를 남의 가게로 변경 못하도록
+		if(!store.getId().equals(menu.getStore().getId())) {
+			throw new IllegalArgumentException("남의 가게 정보는 수정할 수 없습니다");
+		}
+
 		//폐업한 가게입니다
 		if (store.isDeleted()) {
 			throw new IllegalArgumentException("폐업한 가게입니다");
@@ -58,7 +63,7 @@ public class MenuService {
 			throw new IllegalArgumentException("이미 삭제된 메뉴입니다");
 		}
 
-		Menu.updateOf(menuRequestDto.getMenuName(), menuRequestDto.getPrice(), store);
+		menu.update(menuRequestDto.getMenuName(), menuRequestDto.getPrice(), store);
 		return new MenuResponseDto(menuRepository.save(menu));
 	}
 }
