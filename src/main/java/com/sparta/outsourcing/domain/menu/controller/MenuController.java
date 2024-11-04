@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sparta.outsourcing.domain.menu.dto.MenuDeleteDto;
@@ -27,9 +28,10 @@ public class MenuController {
 
 	@PostMapping("")
 	public ResponseEntity<MenuResponseDto> createMenu(
-		@Valid @RequestBody MenuRequestDto menuRequestDto,
-		@RequestAttribute("id") Long currentMemberId
+		@Valid @RequestBody MenuRequestDto menuRequestDto
+		//@RequestAttribute("id") Long currentMemberId
 	) {
+		Long currentMemberId = 1L;
 		MenuResponseDto menuResponseDto = menuService.createMenu(menuRequestDto, currentMemberId);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(menuResponseDto);
@@ -38,22 +40,25 @@ public class MenuController {
 	@PutMapping("/{menuId}")
 	public ResponseEntity<MenuResponseDto> updateMenu(
 		@PathVariable Long menuId,
-		@Valid @RequestBody MenuRequestDto menuRequestDto,
-		@RequestAttribute("id") Long currentMemberId
+		@Valid @RequestBody MenuRequestDto menuRequestDto
+		//@RequestAttribute("id") Long currentMemberId
 	) {
+		Long currentMemberId = 1L;
+
 		MenuResponseDto menuResponseDto = menuService.updateMenu(menuId, menuRequestDto, currentMemberId);
 
 		return ResponseEntity.status(HttpStatus.OK).body(menuResponseDto);
 	}
 
 	@DeleteMapping("/{menuId}")
-	public ResponseEntity<MenuResponseDto> deleteMenu(
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteMenu(
 		@PathVariable Long menuId,
-		@Valid @RequestBody MenuDeleteDto menuDeleteDto,
-		@RequestAttribute("id") Long currentMemberId
+		@Valid @RequestBody MenuDeleteDto menuDeleteDto
+		//@RequestAttribute("id") Long currentMemberId
 	) {
-		MenuResponseDto menuResponseDto = menuService.deleteMenu(menuId, menuDeleteDto, currentMemberId);
+		Long currentMemberId = 1L;
 
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(menuResponseDto);
+		menuService.deleteMenu(menuId, menuDeleteDto, currentMemberId);
 	}
 }

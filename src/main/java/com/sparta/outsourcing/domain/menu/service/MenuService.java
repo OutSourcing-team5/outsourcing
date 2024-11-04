@@ -1,6 +1,7 @@
 package com.sparta.outsourcing.domain.menu.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sparta.outsourcing.domain.menu.dto.MenuDeleteDto;
 import com.sparta.outsourcing.domain.menu.dto.MenuRequestDto;
@@ -35,6 +36,7 @@ public class MenuService {
 		return new MenuResponseDto(menuRepository.save(menu));
 	}
 
+	@Transactional
 	public MenuResponseDto updateMenu(Long menuId, @Valid MenuRequestDto menuRequestDto, Long currentMemberId) {
 		Menu menu = menuRepository.findById(menuId).orElseThrow(() -> new IllegalArgumentException("해당 메뉴가 없습니다"));
 		Store store = storeRepository.findById(menuRequestDto.getStoreId()).orElseThrow(() -> new IllegalArgumentException("해당 가게가 없습니다"));
@@ -59,7 +61,8 @@ public class MenuService {
 		return new MenuResponseDto(menuRepository.save(menu));
 	}
 
-	public MenuResponseDto deleteMenu(Long menuId, MenuDeleteDto menuDeleteDto, Long currentMemberId) {
+	@Transactional
+	public void deleteMenu(Long menuId, MenuDeleteDto menuDeleteDto, Long currentMemberId) {
 		Menu menu = menuRepository.findById(menuId).orElseThrow(() -> new IllegalArgumentException("해당 메뉴가 없습니다"));
 		Store store = storeRepository.findById(menuDeleteDto.getStoreId()).orElseThrow(() -> new IllegalArgumentException("해당 가게가 없습니다"));
 
@@ -72,7 +75,5 @@ public class MenuService {
 		}
 
 		menu.delete();
-
-		return new MenuResponseDto(menuRepository.save(menu));
 	}
 }
