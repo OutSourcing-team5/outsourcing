@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class ShortStoreResponseDto {
-	public Long id;
-	public String storeName;
+	private Long id;
+	private String storeName;
 
 	public ShortStoreResponseDto(Long id, String storeName) {
 		this.id = id;

@@ -1,7 +1,6 @@
 package com.sparta.outsourcing.domain.store.service;
 
 import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +10,13 @@ import org.springframework.stereotype.Service;
 import com.sparta.outsourcing.domain.member.entity.Member;
 import com.sparta.outsourcing.domain.member.entity.MemberRole;
 import com.sparta.outsourcing.domain.member.repository.MemberRepository;
+import com.sparta.outsourcing.domain.menu.dto.MenuResponseFromStoreDto;
+import com.sparta.outsourcing.domain.menu.entity.Menu;
+import com.sparta.outsourcing.domain.menu.repository.MenuRepository;
+import com.sparta.outsourcing.domain.review.dto.ReviewResponseFromStoreDto;
+import com.sparta.outsourcing.domain.review.entity.Review;
+import com.sparta.outsourcing.domain.review.repository.ReviewRepository;
+import com.sparta.outsourcing.domain.store.dto.DetailedStoreResponseDto;
 import com.sparta.outsourcing.domain.store.dto.ShortStoreResponseDto;
 import com.sparta.outsourcing.domain.store.dto.StoreRequestDto;
 import com.sparta.outsourcing.domain.store.dto.StoreResponseDto;
@@ -25,6 +31,8 @@ public class StoreService {
 
 	private final StoreRepository storeRepository;
 	private final MemberRepository memberRepository;
+	private final MenuRepository menuRepository;
+	private final ReviewRepository reviewRepository;
 
 	public StoreResponseDto createStore(StoreRequestDto requestDto, Long memberId) {
 		Member storeOwner = memberRepository.findById(memberId).orElseThrow(
@@ -54,12 +62,24 @@ public class StoreService {
 	public Page<ShortStoreResponseDto> getAllStore(int page) {
 		Pageable pageable = PageRequest.of(page, 5, Sort.by("modifiedAt").descending());
 		Page<Store> stores = storeRepository.findAll(pageable);
-		return stores.map(this::toShortStoreResponseDto);
+		return stores.map(store -> new ShortStoreResponseDto(store.getId(), store.getStoreName()));
 	}
 
-	// ============== 편의 메서드 ==============
+	public DetailedStoreResponseDto getOneStore(Long storeId) {
+		Store store = storeRepository.findById(storeId).orElseThrow(
+			() -> new IllegalArgumentException("해당하는 가게가 없습니다.")
+		);
 
-	private ShortStoreResponseDto toShortStoreResponseDto(Store store) {
-		return new ShortStoreResponseDto(store.getId(), store.getStoreName());
+		Pageable menuPageable = PageRequest.of(0, 5, Sort.by("modifiedAt").descending());
+		Page<Menu> menus = menuRepository.findAllByStoreContaining(store, menuPageable);
+
+		Pageable reviewPageable = PageRequest.of(0, 5, Sort.by("modifiedAt").descending());
+		Page<Review> reviews = reviewRepository.findAllByStoreContaining(store, reviewPageable);
+
+		return new DetailedStoreResponseDto(
+			store,
+			menus.map(MenuResponseFromStoreDto::new),
+			reviews.map(ReviewResponseFromStoreDto::new)
+		);
 	}
 }
