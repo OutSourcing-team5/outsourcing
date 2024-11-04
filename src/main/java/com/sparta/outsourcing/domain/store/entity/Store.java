@@ -49,6 +49,8 @@ public class Store extends TimeStamped {
 	@JoinColumn(name = "memberId", nullable = false)
 	private Member member;
 
+
+
 	private Store(String storeName, Time openTime, Time closeTime, int minPrice) {
 		this.storeName = storeName;
 		this.openTime = openTime;
