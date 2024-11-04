@@ -1,10 +1,17 @@
 package com.sparta.outsourcing.domain.store.service;
 
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.sparta.outsourcing.domain.member.entity.Member;
 import com.sparta.outsourcing.domain.member.entity.MemberRole;
 import com.sparta.outsourcing.domain.member.repository.MemberRepository;
+import com.sparta.outsourcing.domain.store.dto.ShortStoreResponseDto;
 import com.sparta.outsourcing.domain.store.dto.StoreRequestDto;
 import com.sparta.outsourcing.domain.store.dto.StoreResponseDto;
 import com.sparta.outsourcing.domain.store.entity.Store;
@@ -36,5 +43,23 @@ public class StoreService {
 		storeRepository.save(store);
 
 		return new StoreResponseDto(store);
+	}
+
+	public Page<ShortStoreResponseDto> getAllStoreByName(String storeName, int page) {
+		Pageable pageable = PageRequest.of(page, 5, Sort.by("modifiedAt").descending());
+		Page<Store> stores = storeRepository.findAllByStoreNameContaining(storeName, pageable);
+		return stores.map(this::toShortStoreResponseDto);
+	}
+
+	public Page<ShortStoreResponseDto> getAllStore(int page) {
+		Pageable pageable = PageRequest.of(page, 5, Sort.by("modifiedAt").descending());
+		Page<Store> stores = storeRepository.findAll(pageable);
+		return stores.map(this::toShortStoreResponseDto);
+	}
+
+	// ============== 편의 메서드 ==============
+
+	private ShortStoreResponseDto toShortStoreResponseDto(Store store) {
+		return new ShortStoreResponseDto(store.getId(), store.getStoreName());
 	}
 }
