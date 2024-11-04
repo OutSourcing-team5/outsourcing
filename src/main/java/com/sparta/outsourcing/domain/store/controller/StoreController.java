@@ -13,6 +13,8 @@ import com.sparta.outsourcing.domain.store.dto.StoreRequestDto;
 import com.sparta.outsourcing.domain.store.dto.StoreResponseDto;
 import com.sparta.outsourcing.domain.store.service.StoreService;
 
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -25,10 +27,10 @@ public class StoreController {
 	@PostMapping("/stores")
 	public ResponseEntity<StoreResponseDto> createStore(
 		@RequestBody StoreRequestDto requestDto,
-		@RequestAttribute("email") String email
+		@RequestAttribute("id") Long memberId
 	) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(
-			storeService.createStore(email, requestDto)
+			storeService.createStore(requestDto, memberId)
 		);
 	}
 }

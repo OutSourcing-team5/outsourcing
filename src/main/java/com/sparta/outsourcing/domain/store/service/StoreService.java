@@ -19,8 +19,8 @@ public class StoreService {
 	private final StoreRepository storeRepository;
 	private final MemberRepository memberRepository;
 
-	public StoreResponseDto createStore(String email, StoreRequestDto reqDto) {
-		Member storeOwner = memberRepository.findByEmail(email).orElseThrow(
+	public StoreResponseDto createStore(StoreRequestDto requestDto, Long memberId) {
+		Member storeOwner = memberRepository.findById(memberId).orElseThrow(
 			() -> new IllegalArgumentException("해당하는 유저가 없습니다.")
 		);
 
@@ -32,7 +32,7 @@ public class StoreService {
 			throw new IllegalArgumentException("해당 사장님은 이미 3개의 가게를 소유하고 있습니다.");
 		}
 
-		Store store = Store.create(reqDto.getStoreName(), reqDto.getOpenTime(), reqDto.getCloseTime(), reqDto.getMinPrice());
+		Store store = Store.create(requestDto.getStoreName(), requestDto.getOpenTime(), requestDto.getCloseTime(), requestDto.getMinPrice());
 		storeRepository.save(store);
 
 		return new StoreResponseDto(store);
