@@ -46,7 +46,7 @@ public class Store extends TimeStamped {
 	private boolean isDeleted;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "memberId", nullable = false)
+	@JoinColumn(name = "member_id", nullable = false)
 	private Member member;
 
 
