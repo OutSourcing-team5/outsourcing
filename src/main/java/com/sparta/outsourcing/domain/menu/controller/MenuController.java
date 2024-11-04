@@ -2,6 +2,7 @@ package com.sparta.outsourcing.domain.menu.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sparta.outsourcing.domain.menu.dto.MenuDeleteDto;
 import com.sparta.outsourcing.domain.menu.dto.MenuRequestDto;
 import com.sparta.outsourcing.domain.menu.dto.MenuResponseDto;
 import com.sparta.outsourcing.domain.menu.service.MenuService;
@@ -42,5 +44,16 @@ public class MenuController {
 		MenuResponseDto menuResponseDto = menuService.updateMenu(menuId, menuRequestDto, currentMemberId);
 
 		return ResponseEntity.status(HttpStatus.OK).body(menuResponseDto);
+	}
+
+	@DeleteMapping("/{menuId}")
+	public ResponseEntity<MenuResponseDto> deleteMenu(
+		@PathVariable Long menuId,
+		@Valid @RequestBody MenuDeleteDto menuDeleteDto,
+		@RequestAttribute("id") Long currentMemberId
+	) {
+		MenuResponseDto menuResponseDto = menuService.deleteMenu(menuId, menuDeleteDto, currentMemberId);
+
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(menuResponseDto);
 	}
 }

@@ -54,4 +54,8 @@ public class Menu extends TimeStamped {
 		this.menuName = menuName;
 		this.price = price;
 	}
+
+	public void delete() {
+		this.isDeleted = true;
+	}
 }
