@@ -29,6 +29,7 @@ public class Order extends TimeStamped {
 	private Long id;
 
 	@Enumerated(EnumType.STRING)
+	@Setter
 	private OrderStatus status;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -54,8 +55,4 @@ public class Order extends TimeStamped {
 	public static Order createOf(Member member, Store store, Menu menu) {
 		return new Order(member, store, menu);
 	}
-
-	@Setter //Lombok 기본 세팅이라 이렇게 처리
-	private OrderStatus Status;
-
 }

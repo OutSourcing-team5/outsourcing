@@ -74,22 +74,30 @@ public class OrderService {
 		if (!order.getMember().getId().equals(memberId)) {
 			throw new IllegalArgumentException("권한이 없습니다.");
 		}
-		// 주문 상태 전환 유효성 검사 -> 기본값이 pending
+
+		// 주문 상태 유효성 검사
 		String currentStatus = order.getStatus().name();
 		String requestedStatus = statusRequestDto.getOrderStatus();
 
-		if ("PENDING".equals(currentStatus) && !"ACCEPTED".equals(requestedStatus) && !"REJECTED".equals(requestedStatus)) {
-			throw new IllegalArgumentException("대기중인 주문만 거절 가능합니다.");
+		// 대기 상태로 바꾸는 요청: 바로 예외처리
+		if (requestedStatus.equals("PENDING")) {
+			throw new IllegalArgumentException("대기 상태로 변경할 수 없습니다.");
 		}
 
-		if ("COMPLETED".equals(currentStatus) && !"COMPLETED".equals(requestedStatus)) {
-			throw new IllegalArgumentException("수락된 주문만 완료 가능합니다.");
+		// 수락 상태로 바꾸는 요청: 대기가 아니면 언제나 예외처리
+		if (requestedStatus.equals("ACCEPTED") && !currentStatus.equals("PENDING")) {
+			throw new IllegalArgumentException("대기 상태가 아니면 수락 상태로 변경할 수 없습니다.");
 		}
 
-		if ("ACCEPTED".equals(currentStatus) && !"COMPLETED".equals(requestedStatus)) {
-			throw new IllegalArgumentException("대기중인 주문만 수락 가능합니다.");
+		// 거절 상태로 바꾸는 요청: 대기가 아니면 언제나 예외처리
+		if (requestedStatus.equals("REJECTED") && currentStatus.equals("PENDING")) {
+			throw new IllegalArgumentException("대기 상태가 아니면 거절 상태로 변경할 수 없습니다.");
 		}
 
+		//완료 상태로 바꾸는 요청: 수락이 아니면 언제나 예외처리
+		if (requestedStatus.equals("COMPLETED") && currentStatus.equals("ACCEPTED")) {
+			throw new IllegalArgumentException("수락 상태가 아니면 완료 상태로 변경할 수 없습니다.");
+		}
 		// 상태 업데이트
 		order.setStatus(OrderStatus.valueOf(requestedStatus));
 		orderRepository.save(order);
