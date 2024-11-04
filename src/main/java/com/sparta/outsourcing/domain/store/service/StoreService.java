@@ -28,7 +28,7 @@ public class StoreService {
 			throw new IllegalArgumentException("사장님 권한 회원만 가게를 생성할 수 있습니다.");
 		}
 
-		if (storeRepository.countAllByUser(storeOwner) == 3) {
+		if (storeRepository.countAllByMember(storeOwner) == 3) {
 			throw new IllegalArgumentException("해당 사장님은 이미 3개의 가게를 소유하고 있습니다.");
 		}
 
