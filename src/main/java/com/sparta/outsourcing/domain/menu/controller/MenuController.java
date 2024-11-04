@@ -25,10 +25,9 @@ public class MenuController {
 
 	@PostMapping("")
 	public ResponseEntity<MenuResponseDto> createMenu(
-		@Valid @RequestBody MenuRequestDto menuRequestDto
-		//@RequestAttribute("id") Long currentMemberId
+		@Valid @RequestBody MenuRequestDto menuRequestDto,
+		@RequestAttribute("id") Long currentMemberId
 	) {
-		Long currentMemberId = 1L;
 		MenuResponseDto menuResponseDto = menuService.createMenu(menuRequestDto, currentMemberId);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(menuResponseDto);
@@ -37,11 +36,9 @@ public class MenuController {
 	@PutMapping("/{menuId}")
 	public ResponseEntity<MenuResponseDto> updateMenu(
 		@PathVariable Long menuId,
-		@Valid @RequestBody MenuRequestDto menuRequestDto
-		// @RequestAttribute("id") Long currentMemberId
+		@Valid @RequestBody MenuRequestDto menuRequestDto,
+		@RequestAttribute("id") Long currentMemberId
 	) {
-		Long currentMemberId = 1L;
-
 		MenuResponseDto menuResponseDto = menuService.updateMenu(menuId, menuRequestDto, currentMemberId);
 
 		return ResponseEntity.status(HttpStatus.OK).body(menuResponseDto);

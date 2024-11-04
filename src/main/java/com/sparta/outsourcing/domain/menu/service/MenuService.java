@@ -53,7 +53,7 @@ public class MenuService {
 			throw new IllegalArgumentException("폐업한 가게입니다");
 		}
 
-		//권한이 없습니다
+		//권한이 없습니다(가게는 사장님만 생성 가능해서 사장님일때 생성 가능한 검사 삭제)
 		if(!store.getMember().getId().equals(currentMemberId)) {
 			throw new IllegalArgumentException("권한이 없습니다");
 		}
