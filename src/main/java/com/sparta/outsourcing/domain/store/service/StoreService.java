@@ -1,5 +1,7 @@
 package com.sparta.outsourcing.domain.store.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -104,5 +106,29 @@ public class StoreService {
 		store.update(requestDto.getOpenTime(), requestDto.getCloseTime(), requestDto.getMinPrice(), requestDto.isOpened());
 
 		return new StoreResponseDto(store);
+	}
+
+	public void deleteStore(Long storeId, Long memberId) {
+		Store store = storeRepository.findById(storeId).orElseThrow(
+			() -> new IllegalArgumentException("해당하는 가게가 없습니다.")
+		);
+
+		if (store.isDeleted()) {
+			throw new IllegalArgumentException("이미 폐업한 가게입니다.");
+		}
+
+		Member member = memberRepository.findById(memberId).orElseThrow(
+			() -> new IllegalArgumentException("해당하는 유저가 없습니다.")
+		);
+
+		if (member.getId() != store.getMember().getId()) {
+			throw new IllegalArgumentException("가게의 사장님만 수정할 수 있습니다.");
+		}
+
+		store.delete();
+
+		List<Menu> menus = menuRepository.findAllByStore(store);
+		menus.forEach(Menu::delete);
+		menuRepository.saveAll(menus);
 	}
 }

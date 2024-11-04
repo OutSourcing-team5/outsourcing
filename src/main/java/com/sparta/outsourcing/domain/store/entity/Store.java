@@ -72,4 +72,8 @@ public class Store extends TimeStamped {
 		this.minPrice = minPrice;
 		this.isOpened = opened;
 	}
+
+	public void delete() {
+		this.isDeleted = true;
+	}
 }
