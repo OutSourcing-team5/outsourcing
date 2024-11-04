@@ -14,6 +14,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -62,5 +64,12 @@ public class Store extends TimeStamped {
 
 	public static Store createOf(String storeName, Time openTime, Time closeTime, int minPrice, Member member) {
 		return new Store(storeName, openTime, closeTime, minPrice, member);
+	}
+
+	public void update(Time openTime, Time closeTime, int minPrice, boolean opened) {
+		this.openTime = openTime;
+		this.closeTime = closeTime;
+		this.minPrice = minPrice;
+		this.isOpened = opened;
 	}
 }

@@ -7,10 +7,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 
 @Getter
-public class StoreRequestDto {
-	@NotNull(message = "가게 이름은 null 값일 수 없습니다.")
-	private String storeName;
-
+public class StoreUpdateRequestDto {
 	@NotNull(message = "오픈 시간을 정해주셔야 합니다.")
 	private Time openTime;
 
@@ -19,4 +16,6 @@ public class StoreRequestDto {
 
 	@Positive(message = "최소 금액은 음수가 아닙니다.")
 	private int minPrice;
+
+	private boolean isOpened;
 }
