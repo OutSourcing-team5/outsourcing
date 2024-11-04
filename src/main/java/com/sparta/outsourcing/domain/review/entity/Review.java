@@ -48,7 +48,7 @@ public class Review extends TimeStamped {
 		return new Review(rating);
 	}
 
-	public static Review updateOf(int rating) { //새로 생성하지 않는것 이기 때문에..
-		return new Review(rating);
+	public void update(int rating) {
+		this.rating=rating;
 	}
 }

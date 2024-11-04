@@ -57,7 +57,7 @@ public class ReviewService {
 		if (!review.getOrder().getMember().getId().equals(memberId)) {
 			throw new IllegalArgumentException("리뷰를 수정할 권한이 없습니다.");
 		}
-		Review updatedReview = Review.updateOf(requestDto.getRating());
-		return new ReviewResponseDto(updatedReview);
+		review.update(requestDto.getRating());
+		return new ReviewResponseDto(review);
 	}
 }
