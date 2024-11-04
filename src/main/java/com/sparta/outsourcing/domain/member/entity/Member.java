@@ -40,22 +40,15 @@ public class Member extends TimeStamped {
 	@Enumerated(EnumType.STRING)
 	private MemberRole role;
 
-	public Member(MemberRequestDto requestDto) {
-		this.username = requestDto.getUserName();
-		this.password = requestDto.getPassword();
-		this.email = requestDto.getEmail();
-		this.address = requestDto.getAddress();
-		this.role = requestDto.getRole();
+	private Member(String username, String password, String email, String address, MemberRole role) {
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.address = address;
+		this.role = role;
 	}
 
-	public MemberResponseDto to() {
-		return new MemberResponseDto(
-				this.id,
-				this.username,
-				this.email,
-				this.password,
-				this.address,
-				this.role
-		);
+	public static Member createOf(String username, String password, String email, String address, MemberRole role) {
+		return new Member(username, password, email, address, role);
 	}
 }

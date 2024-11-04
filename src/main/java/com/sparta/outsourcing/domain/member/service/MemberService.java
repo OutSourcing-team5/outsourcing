@@ -31,10 +31,11 @@ public class MemberService {
         if (!PasswordEncoder.verifyPassword(requestDto.getPassword())) {
             throw new IllegalArgumentException("비밀번호의 형식이 올바르지 않습니다.");
         }
+        String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
         // 사용자 등록
-        Member member = new Member(requestDto);
+        Member member = Member.createOf(requestDto.getUserName(), encodedPassword, requestDto.getEmail(), requestDto.getAddress(), requestDto.getRole());
         Member savedMember = memberRepository.save(member);
 
-        return savedMember.to();
+        return new MemberResponseDto(savedMember);
     }
 }

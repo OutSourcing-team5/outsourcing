@@ -19,12 +19,8 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/auth/signup")
-    public ResponseEntity<MemberResponseDto> signup(@RequestBody MemberRequestDto requestDto) {
-        try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(memberService.signup(requestDto));
-        } catch (Exception e) {
-            throw new IllegalArgumentException();
-        }
+    public ResponseEntity signup(@RequestBody MemberRequestDto requestDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(memberService.signup(requestDto));
     }
 
 
