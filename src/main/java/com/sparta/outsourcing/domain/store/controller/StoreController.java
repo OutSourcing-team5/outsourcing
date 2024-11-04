@@ -25,12 +25,12 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/stores")
 public class StoreController {
 
 	private final StoreService storeService;
 
-	@PostMapping("/stores")
+	@PostMapping("")
 	public ResponseEntity<StoreResponseDto> createStore(
 		@RequestBody StoreRequestDto requestDto,
 		@RequestAttribute("id") Long memberId
@@ -40,7 +40,7 @@ public class StoreController {
 		);
 	}
 
-	@GetMapping("/stores")
+	@GetMapping("")
 	public ResponseEntity<Page<ShortStoreResponseDto>> getStore(
 		@RequestParam(required = false) String storeName,
 		@RequestParam(defaultValue = "0") int page
