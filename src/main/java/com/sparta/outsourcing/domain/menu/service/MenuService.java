@@ -35,7 +35,8 @@ public class MenuService {
 			throw new IllegalArgumentException("폐업한 가게입니다");
 		}
 
-		Menu menu = new Menu(menuCreateDto, store);
+		//Menu menu = new Menu(menuCreateDto, store);
+		Menu menu = Menu.createOf(menuCreateDto.getMenuName(), menuCreateDto.getPrice(), store);
 		return new MenuResponseDto(menuRepository.save(menu));
 	}
 }

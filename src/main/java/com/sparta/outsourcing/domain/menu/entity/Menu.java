@@ -38,11 +38,14 @@ public class Menu extends TimeStamped {
 	@JoinColumn(name = "storeId", nullable = false)
 	private Store store;
 
-	public Menu(MenuCreateDto menuCreateDto, Store store) {
-		this.menuName = menuCreateDto.getMenuName();
-		this.price = menuCreateDto.getPrice();
+	public Menu(String menuName, int price, Store store) {
+		this.menuName = menuName;
+		this.price = price;
 		this.isDeleted = false;
 		this.store = store;
+	}
 
+	public static Menu createOf(String menuName, int price, Store store) {
+		return new Menu(menuName, price, store);
 	}
 }
