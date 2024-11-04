@@ -30,14 +30,10 @@ public class MenuController {
 
 	@PostMapping("")
 	public ResponseEntity<MenuResponseDto> createMenu(
-		@Valid @RequestBody MenuCreateDto menuCreateDto
-		// @RequestAttribute("role") MemberRole currentMemberRole,
-		// @RequestAttribute("id") Long currentMemberId
+		@Valid @RequestBody MenuCreateDto menuCreateDto,
+		@RequestAttribute("role") MemberRole currentMemberRole,
+		@RequestAttribute("id") Long currentMemberId
 	) {
-
-		MemberRole currentMemberRole = MemberRole.OWNER;
-		Long currentMemberId = 1L;
-
 		MenuResponseDto menuResponseDto = menuService.createMenu(menuCreateDto, currentMemberRole, currentMemberId);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(menuResponseDto);

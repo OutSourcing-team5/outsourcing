@@ -25,14 +25,9 @@ public class MenuService {
 		//가게가 없습니다
 		Store store = storeRepository.findById(menuCreateDto.getStoreId()).orElseThrow(() -> new IllegalArgumentException("해당 가게가 없습니다"));
 
-		// //권한이 없습니다
-		// if(!currentMemberRole.equals(MemberRole.OWNER) && currentMemberId.equals(store.getId())) {
-		// 	throw new IllegalArgumentException("권한이 없습니다");
-		// }
-
-		//알맞은 가격(요청 storeId의 최소주문 값 비교)
-		if(store.getMinPrice() > menuCreateDto.getPrice()) {
-			throw new IllegalArgumentException("가격이 가게의 최소 주문 금액 보다 작습니다");
+		//권한이 없습니다
+		if(!currentMemberRole.equals(MemberRole.OWNER) && currentMemberId.equals(store.getId())) {
+			throw new IllegalArgumentException("권한이 없습니다");
 		}
 
 		// 폐업한 가게인지 확인
@@ -40,7 +35,8 @@ public class MenuService {
 			throw new IllegalArgumentException("폐업한 가게입니다");
 		}
 
-		Menu menu = new Menu(menuCreateDto,store);
-		return new MenuResponseDto(menuRepository.save(menu));
+		Menu menu = new Menu(menuCreateDto, store);
+		Menu menuSave = menuRepository.save(menu);
+		return new MenuResponseDto(menuSave);
 	}
 }
