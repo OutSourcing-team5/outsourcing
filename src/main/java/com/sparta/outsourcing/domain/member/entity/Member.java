@@ -2,6 +2,8 @@ package com.sparta.outsourcing.domain.member.entity;
 
 import com.sparta.outsourcing.domain.TimeStamped;
 
+import com.sparta.outsourcing.domain.member.dto.MemberRequestDto;
+import com.sparta.outsourcing.domain.member.dto.MemberResponseDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -37,4 +39,16 @@ public class Member extends TimeStamped {
 
 	@Enumerated(EnumType.STRING)
 	private MemberRole role;
+
+	private Member(String username, String password, String email, String address, MemberRole role) {
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.address = address;
+		this.role = role;
+	}
+
+	public static Member createOf(String username, String password, String email, String address, MemberRole role) {
+		return new Member(username, password, email, address, role);
+	}
 }
