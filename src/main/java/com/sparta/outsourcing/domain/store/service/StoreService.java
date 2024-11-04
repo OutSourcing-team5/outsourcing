@@ -1,5 +1,7 @@
 package com.sparta.outsourcing.domain.store.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -124,5 +126,9 @@ public class StoreService {
 		}
 
 		store.delete();
+
+		List<Menu> menus = menuRepository.findAllByStore(store);
+		menus.forEach(Menu::delete);
+		menuRepository.saveAll(menus);
 	}
 }
