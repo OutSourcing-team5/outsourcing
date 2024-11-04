@@ -50,9 +50,8 @@ public class Menu extends TimeStamped {
 		return new Menu(menuName, price, store);
 	}
 
-	public void update(String menuName, int price, Store store) {
+	public void update(String menuName, int price) {
 		this.menuName = menuName;
 		this.price = price;
-		this.store = store;
 	}
 }

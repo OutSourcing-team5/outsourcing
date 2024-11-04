@@ -63,7 +63,7 @@ public class MenuService {
 			throw new IllegalArgumentException("이미 삭제된 메뉴입니다");
 		}
 
-		menu.update(menuRequestDto.getMenuName(), menuRequestDto.getPrice(), store);
+		menu.update(menuRequestDto.getMenuName(), menuRequestDto.getPrice());
 		return new MenuResponseDto(menuRepository.save(menu));
 	}
 }
