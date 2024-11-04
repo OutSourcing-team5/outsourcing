@@ -36,7 +36,6 @@ public class MenuService {
 		}
 
 		Menu menu = new Menu(menuCreateDto, store);
-		Menu menuSave = menuRepository.save(menu);
-		return new MenuResponseDto(menuSave);
+		return new MenuResponseDto(menuRepository.save(menu));
 	}
 }
