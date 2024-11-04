@@ -1,6 +1,7 @@
 package com.sparta.outsourcing.domain.menu.entity;
 
 import com.sparta.outsourcing.domain.TimeStamped;
+import com.sparta.outsourcing.domain.menu.dto.MenuCreateDto;
 import com.sparta.outsourcing.domain.store.entity.Store;
 
 import jakarta.persistence.Column;
@@ -36,4 +37,12 @@ public class Menu extends TimeStamped {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "storeId", nullable = false)
 	private Store store;
+
+	public Menu(MenuCreateDto menuCreateDto, Store store) {
+		this.menuName = menuCreateDto.getMenuName();
+		this.price = menuCreateDto.getPrice();
+		this.isDeleted = false;
+		this.store = store;
+
+	}
 }
