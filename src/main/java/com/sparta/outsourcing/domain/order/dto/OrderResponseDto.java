@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderResponseDto {
 	private Long id;
+	private String status;
 	private String menuName;
 	private int price;
 	private String createdAt;
@@ -17,6 +18,7 @@ public class OrderResponseDto {
 
 	public OrderResponseDto(Order order) {
 		this.id = order.getId();
+		this.status = order.getStatus().name();
 		this.menuName = order.getMenu().getMenuName();
 		this.price = order.getMenu().getPrice();
 		this.createdAt = order.getCreatedAt().toString();
