@@ -2,6 +2,7 @@ package com.sparta.outsourcing.domain.member.controller;
 
 import com.sparta.outsourcing.common.filter.AuthFilter;
 import com.sparta.outsourcing.domain.member.dto.DeleteMemberRequestDto;
+import com.sparta.outsourcing.domain.member.dto.LoginRequestDto;
 import com.sparta.outsourcing.domain.member.dto.MemberRequestDto;
 import com.sparta.outsourcing.domain.member.dto.MemberResponseDto;
 import com.sparta.outsourcing.domain.member.service.MemberService;
@@ -34,7 +35,7 @@ public class MemberController {
 
     @PostMapping("/auth/login")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void login(@RequestBody MemberRequestDto requestDto, HttpServletResponse response) {
+    public void login(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
         memberService.login(requestDto, response);
     }
 
