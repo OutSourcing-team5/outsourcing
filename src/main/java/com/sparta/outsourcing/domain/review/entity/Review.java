@@ -56,6 +56,6 @@ public class Review extends TimeStamped {
 	}
 
 	public void softDelete() {
-		isDeleted = true;
+		this.isDeleted = true;
 	}
 }
