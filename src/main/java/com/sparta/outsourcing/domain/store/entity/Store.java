@@ -1,7 +1,6 @@
 package com.sparta.outsourcing.domain.store.entity;
 
 import java.sql.Time;
-import java.time.LocalDate;
 
 import com.sparta.outsourcing.domain.TimeStamped;
 import com.sparta.outsourcing.domain.member.entity.Member;
