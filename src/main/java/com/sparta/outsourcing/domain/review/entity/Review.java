@@ -40,6 +40,9 @@ public class Review extends TimeStamped {
 	@JoinColumn(name = "orderId", nullable = false)
 	private Order order;
 
+	@Column(nullable = false)
+	private boolean isDeleted = false;
+
 	private Review(int rating) {
 		this.rating = rating;
 	}
@@ -50,5 +53,9 @@ public class Review extends TimeStamped {
 
 	public void update(int rating) {
 		this.rating=rating;
+	}
+
+	public void softDelete() {
+		isDeleted = true;
 	}
 }
