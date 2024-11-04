@@ -1,7 +1,5 @@
 package com.sparta.outsourcing.domain.store.controller;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sparta.outsourcing.domain.store.dto.DetailedStoreResponseDto;
-import com.sparta.outsourcing.domain.store.dto.ShortStoreResponseDto;
-import com.sparta.outsourcing.domain.member.entity.MemberRole;
 import com.sparta.outsourcing.domain.store.dto.ShortStoreResponseDto;
 import com.sparta.outsourcing.domain.store.dto.StoreRequestDto;
 import com.sparta.outsourcing.domain.store.dto.StoreResponseDto;
