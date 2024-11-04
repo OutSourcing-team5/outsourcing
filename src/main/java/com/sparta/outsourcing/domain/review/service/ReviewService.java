@@ -8,6 +8,7 @@ import com.sparta.outsourcing.domain.order.entity.Order;
 import com.sparta.outsourcing.domain.order.entity.OrderStatus;
 import com.sparta.outsourcing.domain.order.repository.OrderRepository;
 import com.sparta.outsourcing.domain.review.dto.ReviewRequestDto;
+import com.sparta.outsourcing.domain.review.dto.ReviewResponseDto;
 import com.sparta.outsourcing.domain.review.entity.Review;
 import com.sparta.outsourcing.domain.review.repository.ReviewRepository;
 
@@ -20,7 +21,7 @@ public class ReviewService {
 	public final OrderRepository orderRepository;
 	public final MemberRepository memberRepository;
 
-	public Review createReview(ReviewRequestDto requestDto, Long memberId) {
+	public ReviewResponseDto createReview(ReviewRequestDto requestDto, Long memberId) {
 		if (requestDto.getRating() < 1 || requestDto.getRating() > 5) {
 			throw new IllegalArgumentException("점수는 1 에서 5 사이 숫자에서 골라주세요.");
 		}
@@ -39,7 +40,7 @@ public class ReviewService {
 		if(!order.getMember().getId().equals(memberId)) {
 			throw new IllegalArgumentException("요청된 주문은 해당 멤버의 주문이 아닙니다.");
 		}
-		Review newReview = new Review(requestDto);
-		return reviewRepository.save(newReview);
+		Review newReview = Review.createOf(requestDto.getRating());
+		return new ReviewResponseDto(newReview);
 	}
 }

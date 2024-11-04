@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sparta.outsourcing.domain.review.dto.ReviewRequestDto;
 import com.sparta.outsourcing.domain.review.dto.ReviewResponseDto;
-import com.sparta.outsourcing.domain.review.entity.Review;
 import com.sparta.outsourcing.domain.review.service.ReviewService;
 
 import jakarta.validation.Valid;
@@ -26,10 +25,9 @@ public class ReviewController {
 	public ResponseEntity<ReviewResponseDto> createReview(
 		@RequestBody @Valid ReviewRequestDto requestDto,
 		@RequestAttribute("id") Long memberId
-	)
-	{
-			Review review = reviewService.createReview(requestDto, memberId);
-			ReviewResponseDto responseDto = new ReviewResponseDto(review);
-			return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+	) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(
+			reviewService.createReview(requestDto, memberId)
+		);
 	}
 }
