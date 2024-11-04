@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,8 +17,10 @@ import com.sparta.outsourcing.domain.store.dto.DetailedStoreResponseDto;
 import com.sparta.outsourcing.domain.store.dto.ShortStoreResponseDto;
 import com.sparta.outsourcing.domain.store.dto.StoreRequestDto;
 import com.sparta.outsourcing.domain.store.dto.StoreResponseDto;
+import com.sparta.outsourcing.domain.store.dto.StoreUpdateRequestDto;
 import com.sparta.outsourcing.domain.store.service.StoreService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -29,7 +32,7 @@ public class StoreController {
 
 	@PostMapping("")
 	public ResponseEntity<StoreResponseDto> createStore(
-		@RequestBody StoreRequestDto requestDto,
+		@Valid @RequestBody StoreRequestDto requestDto,
 		@RequestAttribute("id") Long memberId
 	) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(
@@ -53,5 +56,16 @@ public class StoreController {
 		@PathVariable Long storeId
 	) {
 		return ResponseEntity.status(HttpStatus.OK).body(storeService.getOneStore(storeId));
+	}
+
+	@PutMapping("/{storeId")
+	public ResponseEntity<StoreResponseDto> updateStore(
+		@PathVariable Long storeId,
+		@Valid @RequestBody StoreUpdateRequestDto requestDto,
+		@RequestAttribute("id") Long memberId
+	) {
+		return ResponseEntity.status(HttpStatus.OK).body(
+			storeService.updateStore(storeId, requestDto, memberId)
+		);
 	}
 }

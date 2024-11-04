@@ -19,9 +19,11 @@ import com.sparta.outsourcing.domain.store.dto.DetailedStoreResponseDto;
 import com.sparta.outsourcing.domain.store.dto.ShortStoreResponseDto;
 import com.sparta.outsourcing.domain.store.dto.StoreRequestDto;
 import com.sparta.outsourcing.domain.store.dto.StoreResponseDto;
+import com.sparta.outsourcing.domain.store.dto.StoreUpdateRequestDto;
 import com.sparta.outsourcing.domain.store.entity.Store;
 import com.sparta.outsourcing.domain.store.repository.StoreRepository;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -80,5 +82,27 @@ public class StoreService {
 			menus.map(MenuResponseFromStoreDto::new),
 			reviews.map(ReviewResponseFromStoreDto::new)
 		);
+	}
+
+	public StoreResponseDto updateStore(Long storeId, @Valid StoreUpdateRequestDto requestDto, Long memberId) {
+		Store store = storeRepository.findById(storeId).orElseThrow(
+			() -> new IllegalArgumentException("해당하는 가게가 없습니다.")
+		);
+
+		if (store.isDeleted()) {
+			throw new IllegalArgumentException("폐업한 가게입니다.");
+		}
+
+		Member member = memberRepository.findById(memberId).orElseThrow(
+			() -> new IllegalArgumentException("해당하는 유저가 없습니다.")
+		);
+
+		if (member.getId() != store.getMember().getId()) {
+			throw new IllegalArgumentException("가게의 사장님만 수정할 수 있습니다.");
+		}
+
+		store.update(requestDto.getOpenTime(), requestDto.getCloseTime(), requestDto.getMinPrice(), requestDto.isOpened());
+
+		return new StoreResponseDto(store);
 	}
 }
