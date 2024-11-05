@@ -44,7 +44,7 @@ public class Store extends TimeStamped {
 	private boolean open;
 
 	@Column(nullable = false)
-	private boolean delete;
+	private boolean inactive;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id", nullable = false)
@@ -58,7 +58,7 @@ public class Store extends TimeStamped {
 		this.closeTime = closeTime;
 		this.minPrice = minPrice;
 		this.open = false;
-		this.delete = false;
+		this.inactive = false;
 		this.member = member;
 	}
 
@@ -74,6 +74,6 @@ public class Store extends TimeStamped {
 	}
 
 	public void delete() {
-		this.delete = true;
+		this.inactive = true;
 	}
 }
