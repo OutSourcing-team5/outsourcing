@@ -42,6 +42,11 @@ public enum ExceptionCode {
     ONLY_ORDER_ALLOWED(HttpStatus.BAD_REQUEST, "주문한 사람만 수정 가능합니다"),
     CANCEL_ONLY_PENDING(HttpStatus.BAD_REQUEST, "대기 상태일때만 취소 가능합니다"),
     ORDER_NOT_DELIVERED(HttpStatus.BAD_REQUEST, "주문이 배달 완료 상태가 아닙니다"),
+    STORE_CLOSED_BY_OWER(HttpStatus.BAD_REQUEST,"해당 가게는 개인사정으로 문을 닫았습니다"),
+    NOT_ORDER_NOW(HttpStatus.BAD_REQUEST,"선택한 메뉴는 현재 주문할 수 없습니다."),
+    MINIMUM_ORDER_AMOUNT_NOT(HttpStatus.BAD_REQUEST,"최소 주문 금액을 충족하지 않습니다."),
+    NOT_REJECTED_ACCEPT(HttpStatus.BAD_REQUEST,"완료된 주문은 취소할 수 없습니다."),
+
 
     //----------리뷰----------
     NOT_FOUND_REVIEW(HttpStatus.BAD_REQUEST, "해당 리뷰가 없습니다"),
