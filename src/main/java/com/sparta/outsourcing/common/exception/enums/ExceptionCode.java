@@ -35,7 +35,7 @@ public enum ExceptionCode {
     //----------주문----------
     STORE_CLOSED(HttpStatus.BAD_REQUEST, "영업 시간이 아닙니다"),
     LOWER_THAN_MIN_ORDER(HttpStatus.BAD_REQUEST, "주문 금액이 최소 주문 금액보다 작습니다"),
-    NOT_FOUND_ORDER(HttpStatus.BAD_REQUEST, "해당 주문이 없습니다"),
+    NOT_FOUND_ORDER(HttpStatus.NOT_FOUND, "해당 주문이 없습니다"),
     CANNOT_CHANGE_TO_PENDING(HttpStatus.BAD_REQUEST, "대기 상태로 변경할 수 없습니다"),
     ACCEPT_ONLY_PENDING(HttpStatus.BAD_REQUEST, "대기 상태일때만 수락 가능합니다"),
     REJECTED_ONLY_PENDING(HttpStatus.BAD_REQUEST, "대기 상태일때만 거절 가능합니다"),
@@ -45,9 +45,10 @@ public enum ExceptionCode {
     ORDER_NOT_DELIVERED(HttpStatus.BAD_REQUEST, "주문이 배달 완료 상태가 아닙니다"),
 
     //----------리뷰----------
-    NOT_FOUND_REVIEW(HttpStatus.BAD_REQUEST, "해당 리뷰가 없습니다"),
+    NOT_FOUND_REVIEW(HttpStatus.NOT_FOUND, "해당 리뷰가 없습니다"),
     SCORE_OUT_OF_RANGE(HttpStatus.BAD_REQUEST, "점수는 1 에서 5 사이 숫자에서 골라주세요"),
     REVIEW_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "동일한 주문에 대해 이미 리뷰가 작성되었습니다"),
+    NOT_ORDER_STATUS_COMPLETED(HttpStatus.FORBIDDEN, "주문이 배달 완료 상태가 아닙니다."),
 
     //권한
     ONLY_OWNER_ALLOWED(HttpStatus.FORBIDDEN, "사장님만 가능합니다"),
