@@ -8,4 +8,5 @@ import lombok.NoArgsConstructor;
 public class OrderRequestDto {
 	private Long menuId;
 	private Long storeId;
+	private int count;
 }

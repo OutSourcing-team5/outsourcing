@@ -48,17 +48,25 @@ public class Order extends TimeStamped {
 	@Column(nullable = false)
 	private boolean inactive;
 
+	@Column(nullable = false)
+	private int count;
+
+	@Column(nullable = false)
+	private int totalPrice;
+
 	// 주문 생성자: 필수 필드 초기화
-	private Order(Member member, Store store, Menu menu) {
+	private Order(Member member, Store store, Menu menu, int count) {
 		this.member = member;
 		this.store = store;
 		this.menu = menu;
+		this.count = count;
+		this.totalPrice = menu.getPrice() * count;
 		this.status = OrderStatus.PENDING;
 		this.inactive = false;
 	}
 
-	public static Order createOf(Member member, Store store, Menu menu) {
-		return new Order(member, store, menu);
+	public static Order createOf(Member member, Store store, Menu menu, int count) {
+		return new Order(member, store, menu, count);
 	}
 
 	public void delete() {
