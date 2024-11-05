@@ -64,7 +64,7 @@ public class OrderService {
 			throw new IllegalArgumentException("최소 주문 금액을 충족하지 않습니다.");
 		}
 
-		Order order = Order.createOf(member, store, menu);
+		Order order = Order.createOf(member, store, menu, requestDto.getCount());
 		orderRepository.save(order);
 
 		return new OrderResponseDto(order);
