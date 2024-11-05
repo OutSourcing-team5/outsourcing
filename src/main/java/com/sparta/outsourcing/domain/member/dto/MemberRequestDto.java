@@ -10,7 +10,7 @@ import lombok.Getter;
 @Getter
 public class MemberRequestDto {
     @NotNull(message = "이름을 입력하세요.")
-    private String userName;
+    private String username;
     @Email(message = "이메일 형식에 맞게 작성하세요.")
     private String email;
     @NotNull(message = "비밀번호를 입력하세요")
