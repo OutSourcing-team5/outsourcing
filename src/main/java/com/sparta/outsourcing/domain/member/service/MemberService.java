@@ -44,10 +44,6 @@ public class MemberService {
         if (checkEmail.isPresent()) {
             throw new IllegalArgumentException("중복된 Email 입니다.");
         }
-        // 비밀번호 검증
-        if (!PasswordEncoder.verifyPassword(requestDto.getPassword())) {
-            throw new IllegalArgumentException("비밀번호의 형식이 올바르지 않습니다.");
-        }
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
         // 사용자 등록
         Member member = Member.createOf(requestDto.getUserName(), encodedPassword, requestDto.getEmail(), requestDto.getAddress(), requestDto.getRole());
@@ -107,9 +103,6 @@ public class MemberService {
         if (!passwordEncoder.matches(requestDto.getOldPassword(), member.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-        if (!PasswordEncoder.verifyPassword(requestDto.getNewPassword())) {
-            throw new IllegalArgumentException("비밀번호의 형식이 올바르지 않습니다.");
-        }
 
         String encodedPassword = "";
 
@@ -117,7 +110,7 @@ public class MemberService {
             encodedPassword = passwordEncoder.encode(requestDto.getNewPassword());
         }
 
-        member.update(requestDto.getUserName(), encodedPassword, requestDto.getAddress());
+        member.update(requestDto.getUsername(), encodedPassword, requestDto.getAddress());
         memberRepository.save(member);
     }
 }
