@@ -43,18 +43,12 @@ public class Review extends TimeStamped {
 	@Column(nullable = false)
 	private boolean inactive;
 
-	private Review(int rating) {
+	public static Review createOf(int rating, Order order) {
+		return new Review(rating, order);
+	}
+
+	private Review(int rating, Order order) {
 		this.rating = rating;
-		this.inactive = false;
-	}
-
-	public static Review createReview(int rating, Order order) {
-		Review review = new Review(rating);
-		review.setOrderAndStore(order);
-		return review;
-	}
-
-	private void setOrderAndStore(Order order) {
 		this.order = order;
 		this.store = order.getStore();
 	}
