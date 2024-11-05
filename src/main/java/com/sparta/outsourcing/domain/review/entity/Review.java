@@ -48,8 +48,15 @@ public class Review extends TimeStamped {
 		this.inactive = false;
 	}
 
-	public static Review createOf(int rating) {
-		return new Review(rating);
+	public static Review createReview(int rating, Order order) {
+		Review review = new Review(rating);
+		review.setOrderAndStore(order);
+		return review;
+	}
+
+	private void setOrderAndStore(Order order) {
+		this.order = order;
+		this.store = order.getStore();
 	}
 
 	public void update(int rating) {
