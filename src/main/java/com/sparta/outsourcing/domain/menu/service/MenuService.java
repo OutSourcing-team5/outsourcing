@@ -28,7 +28,7 @@ public class MenuService {
 			throw new IllegalArgumentException("해당 기능은 사장님만 가능합니다");
 		}
 
-		if (store.isDeleted()) {
+		if (store.isDelete()) {
 			throw new IllegalArgumentException("폐업한 가게입니다");
 		}
 
@@ -45,7 +45,7 @@ public class MenuService {
 			throw new IllegalArgumentException("남의 가게 정보는 수정할 수 없습니다");
 		}
 
-		if (store.isDeleted()) {
+		if (store.isDelete()) {
 			throw new IllegalArgumentException("폐업한 가게입니다");
 		}
 
@@ -53,7 +53,7 @@ public class MenuService {
 			throw new IllegalArgumentException("해당 기능은 사장님만 가능합니다");
 		}
 
-		if(menu.isDeleted()) {
+		if(menu.isDelete()) {
 			throw new IllegalArgumentException("이미 삭제된 메뉴입니다");
 		}
 
@@ -70,7 +70,7 @@ public class MenuService {
 			throw new IllegalArgumentException("해당 기능은 사장님만 가능합니다");
 		}
 
-		if(menu.isDeleted()) {
+		if(menu.isDelete()) {
 			throw new IllegalArgumentException("이미 삭제된 메뉴입니다");
 		}
 
