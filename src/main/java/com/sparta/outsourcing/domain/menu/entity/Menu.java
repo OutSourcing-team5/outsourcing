@@ -33,7 +33,7 @@ public class Menu extends TimeStamped {
 	private int price;
 
 	@Column(nullable = false)
-	private boolean delete;
+	private boolean inactive;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "storeId", nullable = false)
@@ -42,7 +42,7 @@ public class Menu extends TimeStamped {
 	public Menu(String menuName, int price, Store store) {
 		this.menuName = menuName;
 		this.price = price;
-		this.delete = false;
+		this.inactive = false;
 		this.store = store;
 	}
 
@@ -56,6 +56,6 @@ public class Menu extends TimeStamped {
 	}
 
 	public void delete() {
-		this.delete = true;
+		this.inactive = true;
 	}
 }
