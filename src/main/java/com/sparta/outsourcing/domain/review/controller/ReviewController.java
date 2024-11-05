@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sparta.outsourcing.domain.review.dto.ReviewDeleteRequestDto;
@@ -26,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class ReviewController {
 	private final ReviewService reviewService;
 
+	//리뷰 생성
 	@PostMapping
 	public ResponseEntity<ReviewResponseDto> createReview(
 		@RequestBody @Valid ReviewRequestDto requestDto,
@@ -46,7 +48,7 @@ public class ReviewController {
 		return ResponseEntity.status(HttpStatus.OK).body(reviewService.updateReview(reviewId, requestDto, memberId));
 	}
 
-	//리뷰 삭제로직
+	//리뷰 삭제
 	@DeleteMapping("/{reviewId}")
 	public ResponseEntity<Void> deleteReview(
 		@PathVariable Long reviewId,
