@@ -12,6 +12,7 @@ import com.sparta.outsourcing.domain.member.dto.DeleteMemberRequestDto;
 import com.sparta.outsourcing.domain.member.dto.LoginRequestDto;
 import com.sparta.outsourcing.domain.member.dto.MemberRequestDto;
 import com.sparta.outsourcing.domain.member.dto.MemberResponseDto;
+import com.sparta.outsourcing.domain.member.dto.UpdateMemberRequestDto;
 import com.sparta.outsourcing.domain.member.entity.Member;
 import com.sparta.outsourcing.domain.member.repository.MemberRepository;
 import com.sparta.outsourcing.domain.menu.entity.Menu;
@@ -97,4 +98,26 @@ public class MemberService {
         orders.forEach(Order::delete);
         orderRepository.saveAll(orders);
 	}
+
+    @Transactional
+    public void updateMember(UpdateMemberRequestDto requestDto, Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(
+            () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
+        );
+        if (!passwordEncoder.matches(requestDto.getOldPassword(), member.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+        if (!PasswordEncoder.verifyPassword(requestDto.getNewPassword())) {
+            throw new IllegalArgumentException("비밀번호의 형식이 올바르지 않습니다.");
+        }
+
+        String encodedPassword = "";
+
+        if (requestDto.getNewPassword() != null && !requestDto.getNewPassword().isEmpty()) {
+            encodedPassword = passwordEncoder.encode(requestDto.getNewPassword());
+        }
+
+        member.update(requestDto.getUserName(), encodedPassword, requestDto.getAddress());
+        memberRepository.save(member);
+    }
 }

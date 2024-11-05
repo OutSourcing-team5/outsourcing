@@ -58,4 +58,16 @@ public class Member extends TimeStamped {
 	public void delete() {
 		isDeleted = true;
 	}
+
+	public void update(String username, String password, String address) {
+		if (username != null && !username.isEmpty()) {
+			this.username = username;
+		}
+		if (password != null && !username.isEmpty()) {
+			this.password = password;
+		}
+		if (address != null && !username.isEmpty()) {
+			this.address = address;
+		}
+	}
 }

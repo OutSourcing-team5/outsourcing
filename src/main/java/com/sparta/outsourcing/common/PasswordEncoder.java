@@ -18,4 +18,9 @@ public class PasswordEncoder {
 		BCrypt.Result result = BCrypt.verifyer().verify(rawPassword.toCharArray(), encodePassword);
 		return result.verified;
 	}
+
+	// public boolean equals(String newPassword, String passwordConfirm) {
+	// 	BCrypt.Result result = BCrypt.verifyer().verify(newPassword.toCharArray(), passwordConfirm);
+	// 	return result.verified;
+	// }
 }
