@@ -39,7 +39,7 @@ public class OrderService {
 			() -> new IllegalArgumentException("해당 가게를 찾을 수 없습니다.")
 		);
 
-		if (store.isDelete()) {
+		if (store.isInactive()) {
 			throw new IllegalArgumentException("폐업한 가게입니다.");
 		}
 
@@ -52,7 +52,7 @@ public class OrderService {
 			() -> new IllegalArgumentException("해당 메뉴를 찾을 수 없습니다.")
 		);
 
-		if (menu.isDelete()) {
+		if (menu.isInactive()) {
 			throw new IllegalArgumentException("선택한 메뉴는 현재 주문할 수 없습니다.");
 		}
 

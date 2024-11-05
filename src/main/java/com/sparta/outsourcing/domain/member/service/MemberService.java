@@ -12,6 +12,7 @@ import com.sparta.outsourcing.domain.member.dto.DeleteMemberRequestDto;
 import com.sparta.outsourcing.domain.member.dto.LoginRequestDto;
 import com.sparta.outsourcing.domain.member.dto.MemberRequestDto;
 import com.sparta.outsourcing.domain.member.dto.MemberResponseDto;
+import com.sparta.outsourcing.domain.member.dto.UpdateMemberRequestDto;
 import com.sparta.outsourcing.domain.member.entity.Member;
 import com.sparta.outsourcing.domain.member.repository.MemberRepository;
 import com.sparta.outsourcing.domain.menu.entity.Menu;
@@ -43,13 +44,9 @@ public class MemberService {
         if (checkEmail.isPresent()) {
             throw new IllegalArgumentException("중복된 Email 입니다.");
         }
-        // 비밀번호 검증
-        if (!PasswordEncoder.verifyPassword(requestDto.getPassword())) {
-            throw new IllegalArgumentException("비밀번호의 형식이 올바르지 않습니다.");
-        }
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
         // 사용자 등록
-        Member member = Member.createOf(requestDto.getUserName(), encodedPassword, requestDto.getEmail(), requestDto.getAddress(), requestDto.getRole());
+        Member member = Member.createOf(requestDto.getUsername(), encodedPassword, requestDto.getEmail(), requestDto.getAddress(), requestDto.getRole());
         memberRepository.save(member);
 
         return new MemberResponseDto(member);
@@ -77,15 +74,15 @@ public class MemberService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        if (member.isDelete()) {
+        if (member.isInactive()) {
             throw new IllegalArgumentException("이미 삭제된 회원입니다.");
         }
 
         member.delete();
 
-        List<Store> stores = storeRepository.findAllByMemberAndDeleteFalse(member);
+        List<Store> stores = storeRepository.findAllByMemberAndInactiveFalse(member);
         stores.forEach(store -> {
-            List<Menu> menus = menuRepository.findAllByStoreAndDeleteFalse(store);
+            List<Menu> menus = menuRepository.findAllByStoreAndInactiveFalse(store);
             menus.forEach(Menu::delete);
             menuRepository.saveAll(menus);
             store.delete();
@@ -93,8 +90,27 @@ public class MemberService {
         );
         storeRepository.saveAll(stores);
 
-        List<Order> orders = orderRepository.findAllByMemberAndDeleteFalse(member);
+        List<Order> orders = orderRepository.findAllByMemberAndInactiveFalse(member);
         orders.forEach(Order::delete);
         orderRepository.saveAll(orders);
 	}
+
+    @Transactional
+    public void updateMember(UpdateMemberRequestDto requestDto, Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(
+            () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
+        );
+        if (!passwordEncoder.matches(requestDto.getOldPassword(), member.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
+        String encodedPassword = "";
+
+        if (requestDto.getNewPassword() != null && !requestDto.getNewPassword().isEmpty()) {
+            encodedPassword = passwordEncoder.encode(requestDto.getNewPassword());
+        }
+
+        member.update(requestDto.getUsername(), encodedPassword, requestDto.getAddress());
+        memberRepository.save(member);
+    }
 }

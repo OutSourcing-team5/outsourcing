@@ -10,14 +10,14 @@ import lombok.Getter;
 @AllArgsConstructor
 public class MemberResponseDto {
     private Long id;
-    private String userName;
+    private String username;
     private String email;
     private String createdAt;
     private String modifiedAt;
 
     public MemberResponseDto(Member savedMember) {
         this.id = savedMember.getId();
-        this.userName = savedMember.getUsername();
+        this.username = savedMember.getUsername();
         this.email = savedMember.getEmail();
         this.createdAt = savedMember.getCreatedAt().toString();
         this.modifiedAt = savedMember.getModifiedAt().toString();

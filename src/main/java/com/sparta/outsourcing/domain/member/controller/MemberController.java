@@ -5,6 +5,7 @@ import com.sparta.outsourcing.domain.member.dto.DeleteMemberRequestDto;
 import com.sparta.outsourcing.domain.member.dto.LoginRequestDto;
 import com.sparta.outsourcing.domain.member.dto.MemberRequestDto;
 import com.sparta.outsourcing.domain.member.dto.MemberResponseDto;
+import com.sparta.outsourcing.domain.member.dto.UpdateMemberRequestDto;
 import com.sparta.outsourcing.domain.member.service.MemberService;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,5 +48,13 @@ public class MemberController {
         @RequestAttribute("id") Long memberId
     ) {
         memberService.deleteMember(requestDto, memberId);
+    }
+
+    @PutMapping("/members/{memberId}")
+    public void updateMember(
+        @RequestBody @Valid UpdateMemberRequestDto requestDto,
+        @RequestAttribute("id") Long memberId
+    ) {
+        memberService.updateMember(requestDto, memberId);
     }
 }

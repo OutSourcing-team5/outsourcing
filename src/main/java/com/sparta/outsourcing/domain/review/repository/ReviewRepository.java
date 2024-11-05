@@ -12,6 +12,6 @@ import com.sparta.outsourcing.domain.store.entity.Store;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 	Optional<Object> findByOrderId(Long orderId);
 
-	Page<Review> findAllByStoreAndDeleteFalse(Store store, Pageable reviewPageable);
+	Page<Review> findAllByStoreAndInactiveFalse(Store store, Pageable reviewPageable);
 }
 

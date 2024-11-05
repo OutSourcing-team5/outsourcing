@@ -40,7 +40,8 @@ public class Member extends TimeStamped {
 	@Enumerated(EnumType.STRING)
 	private MemberRole role;
 
-	private boolean delete;
+	@Column(nullable = false)
+	private boolean inactive;
 
 	private Member(String username, String password, String email, String address, MemberRole role) {
 		this.username = username;
@@ -48,7 +49,7 @@ public class Member extends TimeStamped {
 		this.email = email;
 		this.address = address;
 		this.role = role;
-		this.delete = false;
+		this.inactive = false;
 	}
 
 	public static Member createOf(String username, String password, String email, String address, MemberRole role) {
@@ -56,6 +57,18 @@ public class Member extends TimeStamped {
 	}
 
 	public void delete() {
-		delete = true;
+		inactive = true;
+	}
+
+	public void update(String username, String password, String address) {
+		if (username != null && !username.isEmpty()) {
+			this.username = username;
+		}
+		if (password != null && !username.isEmpty()) {
+			this.password = password;
+		}
+		if (address != null && !username.isEmpty()) {
+			this.address = address;
+		}
 	}
 }

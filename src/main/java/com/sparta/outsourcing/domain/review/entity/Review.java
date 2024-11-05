@@ -40,11 +40,12 @@ public class Review extends TimeStamped {
 	@JoinColumn(name = "orderId", nullable = false)
 	private Order order;
 
-	private boolean delete;
+	@Column(nullable = false)
+	private boolean inactive;
 
 	private Review(int rating) {
 		this.rating = rating;
-		this.delete = false;
+		this.inactive = false;
 	}
 
 	public static Review createOf(int rating) {
@@ -53,5 +54,9 @@ public class Review extends TimeStamped {
 
 	public void update(int rating) {
 		this.rating=rating;
+	}
+
+	public void softDelete() {
+		inactive = true;
 	}
 }
