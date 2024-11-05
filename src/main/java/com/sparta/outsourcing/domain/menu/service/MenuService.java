@@ -1,8 +1,11 @@
 package com.sparta.outsourcing.domain.menu.service;
 
+import static com.sparta.outsourcing.common.exception.enums.ExceptionCode.*;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sparta.outsourcing.common.exception.customException.MenuExceptions;
 import com.sparta.outsourcing.domain.menu.dto.MenuDeleteDto;
 import com.sparta.outsourcing.domain.menu.dto.MenuRequestDto;
 import com.sparta.outsourcing.domain.menu.dto.MenuResponseDto;
@@ -22,14 +25,14 @@ public class MenuService {
 	private final MenuRepository menuRepository;
 
 	public MenuResponseDto createMenu(@Valid MenuRequestDto menuRequestDto, Long currentMemberId) {
-		Store store = storeRepository.findById(menuRequestDto.getStoreId()).orElseThrow(() -> new IllegalArgumentException("해당 가게가 없습니다"));
+		Store store = storeRepository.findById(menuRequestDto.getStoreId()).orElseThrow(() -> new MenuExceptions(NOT_FOUND_STORE));
 
 		if(!currentMemberId.equals(store.getMember().getId())) {
-			throw new IllegalArgumentException("해당 기능은 사장님만 가능합니다");
+			throw new MenuExceptions(ONLY_OWNER_ALLOWED);
 		}
 
 		if (store.isInactive()) {
-			throw new IllegalArgumentException("폐업한 가게입니다");
+			throw new MenuExceptions(STORE_OUT_OF_BUSINESS);
 		}
 
 		Menu menu = Menu.createOf(menuRequestDto.getMenuName(), menuRequestDto.getPrice(), store);
@@ -38,23 +41,23 @@ public class MenuService {
 
 	@Transactional
 	public MenuResponseDto updateMenu(Long menuId, @Valid MenuRequestDto menuRequestDto, Long currentMemberId) {
-		Menu menu = menuRepository.findById(menuId).orElseThrow(() -> new IllegalArgumentException("해당 메뉴가 없습니다"));
-		Store store = storeRepository.findById(menuRequestDto.getStoreId()).orElseThrow(() -> new IllegalArgumentException("해당 가게가 없습니다"));
+		Menu menu = menuRepository.findById(menuId).orElseThrow(() -> new MenuExceptions(NOT_FOUND_MENU));
+		Store store = storeRepository.findById(menuRequestDto.getStoreId()).orElseThrow(() -> new MenuExceptions(NOT_FOUND_STORE));
 
 		if(!store.getId().equals(menu.getStore().getId())) {
-			throw new IllegalArgumentException("남의 가게 정보는 수정할 수 없습니다");
+			throw new MenuExceptions(CANNOT_MODIFY_STORE_ID);
 		}
 
 		if (store.isInactive()) {
-			throw new IllegalArgumentException("폐업한 가게입니다");
+			throw new MenuExceptions(STORE_OUT_OF_BUSINESS);
 		}
 
 		if(!store.getMember().getId().equals(currentMemberId)) {
-			throw new IllegalArgumentException("해당 기능은 사장님만 가능합니다");
+			throw new MenuExceptions(ONLY_OWNER_ALLOWED);
 		}
 
 		if(menu.isInactive()) {
-			throw new IllegalArgumentException("이미 삭제된 메뉴입니다");
+			throw new MenuExceptions(MENU_ALREADY_DELETED);
 		}
 
 		menu.update(menuRequestDto.getMenuName(), menuRequestDto.getPrice());
@@ -63,15 +66,15 @@ public class MenuService {
 
 	@Transactional
 	public void deleteMenu(Long menuId, MenuDeleteDto menuDeleteDto, Long currentMemberId) {
-		Menu menu = menuRepository.findById(menuId).orElseThrow(() -> new IllegalArgumentException("해당 메뉴가 없습니다"));
-		Store store = storeRepository.findById(menuDeleteDto.getStoreId()).orElseThrow(() -> new IllegalArgumentException("해당 가게가 없습니다"));
+		Menu menu = menuRepository.findById(menuId).orElseThrow(() -> new MenuExceptions(NOT_FOUND_MENU));
+		Store store = storeRepository.findById(menuDeleteDto.getStoreId()).orElseThrow(() -> new MenuExceptions(NOT_FOUND_STORE));
 
 		if(!store.getMember().getId().equals(currentMemberId)) {
-			throw new IllegalArgumentException("해당 기능은 사장님만 가능합니다");
+			throw new MenuExceptions(ONLY_OWNER_ALLOWED);
 		}
 
 		if(menu.isInactive()) {
-			throw new IllegalArgumentException("이미 삭제된 메뉴입니다");
+			throw new MenuExceptions(MENU_ALREADY_DELETED);
 		}
 
 		menu.delete();
