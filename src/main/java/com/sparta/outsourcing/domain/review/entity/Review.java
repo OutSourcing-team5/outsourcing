@@ -54,4 +54,8 @@ public class Review extends TimeStamped {
 	public void update(int rating) {
 		this.rating=rating;
 	}
+
+	public void softDelete() {
+		delete = true;
+	}
 }
