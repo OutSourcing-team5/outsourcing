@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sparta.outsourcing.common.JwtUtil;
 import com.sparta.outsourcing.common.PasswordEncoder;
 import com.sparta.outsourcing.domain.member.dto.DeleteMemberRequestDto;
+import com.sparta.outsourcing.domain.member.dto.LoginRequestDto;
 import com.sparta.outsourcing.domain.member.dto.MemberRequestDto;
 import com.sparta.outsourcing.domain.member.dto.MemberResponseDto;
 import com.sparta.outsourcing.domain.member.entity.Member;
@@ -54,8 +55,7 @@ public class MemberService {
         return new MemberResponseDto(member);
     }
 
-    @Transactional
-	public void login(MemberRequestDto requestDto, HttpServletResponse response) {
+	public void login(LoginRequestDto requestDto, HttpServletResponse response) {
         String email = requestDto.getEmail();
         String password = requestDto.getPassword();
         Member member = memberRepository.findByEmail(email).orElseThrow(() ->
