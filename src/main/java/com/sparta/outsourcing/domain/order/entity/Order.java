@@ -46,7 +46,7 @@ public class Order extends TimeStamped {
 	private Menu menu;
 
 	@Column(nullable = false)
-	private boolean isDeleted;
+	private boolean delete;
 
 	// 주문 생성자: 필수 필드 초기화
 	private Order(Member member, Store store, Menu menu) {
@@ -54,7 +54,7 @@ public class Order extends TimeStamped {
 		this.store = store;
 		this.menu = menu;
 		this.status = OrderStatus.PENDING;
-		this.isDeleted = false;
+		this.delete = false;
 	}
 
 	public static Order createOf(Member member, Store store, Menu menu) {
@@ -62,6 +62,6 @@ public class Order extends TimeStamped {
 	}
 
 	public void delete() {
-		this.isDeleted = true;
+		this.delete = true;
 	}
 }

@@ -41,10 +41,10 @@ public class Store extends TimeStamped {
 	private int minPrice;
 
 	@Column(nullable = false)
-	private boolean isOpened;
+	private boolean open;
 
 	@Column(nullable = false)
-	private boolean isDeleted;
+	private boolean delete;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id", nullable = false)
@@ -57,8 +57,8 @@ public class Store extends TimeStamped {
 		this.openTime = openTime;
 		this.closeTime = closeTime;
 		this.minPrice = minPrice;
-		this.isOpened = false;
-		this.isDeleted = false;
+		this.open = false;
+		this.delete = false;
 		this.member = member;
 	}
 
@@ -70,10 +70,10 @@ public class Store extends TimeStamped {
 		this.openTime = openTime;
 		this.closeTime = closeTime;
 		this.minPrice = minPrice;
-		this.isOpened = opened;
+		this.open = opened;
 	}
 
 	public void delete() {
-		this.isDeleted = true;
+		this.delete = true;
 	}
 }

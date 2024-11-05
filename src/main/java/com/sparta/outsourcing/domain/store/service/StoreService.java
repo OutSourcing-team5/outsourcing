@@ -46,7 +46,7 @@ public class StoreService {
 			throw new IllegalArgumentException("사장님 권한 회원만 가게를 생성할 수 있습니다.");
 		}
 
-		if (storeRepository.countActiveStoresByMember(storeOwner) == 3) {
+		if (storeRepository.countAllByMemberAndDeleteFalse(storeOwner) == 3) {
 			throw new IllegalArgumentException("해당 사장님은 이미 3개의 가게를 소유하고 있습니다.");
 		}
 
@@ -58,13 +58,13 @@ public class StoreService {
 
 	public Page<ShortStoreResponseDto> getAllStoreByName(String storeName, int page) {
 		Pageable pageable = PageRequest.of(page, 5, Sort.by("modifiedAt").descending());
-		Page<Store> stores = storeRepository.findAllByStoreNameContainingAndIsDeletedFalse(storeName, pageable);
+		Page<Store> stores = storeRepository.findAllByStoreNameContainingAndDeleteFalse(storeName, pageable);
 		return stores.map(store -> new ShortStoreResponseDto(store.getId(), store.getStoreName()));
 	}
 
 	public Page<ShortStoreResponseDto> getAllStore(int page) {
 		Pageable pageable = PageRequest.of(page, 5, Sort.by("modifiedAt").descending());
-		Page<Store> stores = storeRepository.findAllAndIsDeletedFalse(pageable);
+		Page<Store> stores = storeRepository.findAllByDeleteFalse(pageable);
 		return stores.map(store -> new ShortStoreResponseDto(store.getId(), store.getStoreName()));
 	}
 
@@ -74,10 +74,10 @@ public class StoreService {
 		);
 
 		Pageable menuPageable = PageRequest.of(0, 5, Sort.by("modifiedAt").descending());
-		Page<Menu> menus = menuRepository.findAllByActiveStore(store, menuPageable);
+		Page<Menu> menus = menuRepository.findAllByStoreAndDeleteFalse(store, menuPageable);
 
 		Pageable reviewPageable = PageRequest.of(0, 5, Sort.by("modifiedAt").descending());
-		Page<Review> reviews = reviewRepository.findAllByActiveStore(store, reviewPageable);
+		Page<Review> reviews = reviewRepository.findAllByStoreAndDeleteFalse(store, reviewPageable);
 
 		return new DetailedStoreResponseDto(
 			store,
@@ -91,7 +91,7 @@ public class StoreService {
 			() -> new IllegalArgumentException("해당하는 가게가 없습니다.")
 		);
 
-		if (store.isDeleted()) {
+		if (store.isDelete()) {
 			throw new IllegalArgumentException("폐업한 가게입니다.");
 		}
 
@@ -113,7 +113,7 @@ public class StoreService {
 			() -> new IllegalArgumentException("해당하는 가게가 없습니다.")
 		);
 
-		if (store.isDeleted()) {
+		if (store.isDelete()) {
 			throw new IllegalArgumentException("이미 폐업한 가게입니다.");
 		}
 
@@ -127,7 +127,7 @@ public class StoreService {
 
 		store.delete();
 
-		List<Menu> menus = menuRepository.findAllByActiveStore(store);
+		List<Menu> menus = menuRepository.findAllByStoreAndDeleteFalse(store);
 		menus.forEach(Menu::delete);
 		menuRepository.saveAll(menus);
 	}

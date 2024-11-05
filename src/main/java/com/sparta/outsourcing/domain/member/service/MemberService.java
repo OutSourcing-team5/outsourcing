@@ -77,15 +77,15 @@ public class MemberService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        if (member.isDeleted()) {
+        if (member.isDelete()) {
             throw new IllegalArgumentException("이미 삭제된 회원입니다.");
         }
 
         member.delete();
 
-        List<Store> stores = storeRepository.findAllByActiveMember(member);
+        List<Store> stores = storeRepository.findAllByMemberAndDeleteFalse(member);
         stores.forEach(store -> {
-            List<Menu> menus = menuRepository.findAllByActiveStore(store);
+            List<Menu> menus = menuRepository.findAllByStoreAndDeleteFalse(store);
             menus.forEach(Menu::delete);
             menuRepository.saveAll(menus);
             store.delete();
@@ -93,7 +93,7 @@ public class MemberService {
         );
         storeRepository.saveAll(stores);
 
-        List<Order> orders = orderRepository.findAllByActiveMember(member);
+        List<Order> orders = orderRepository.findAllByMemberAndDeleteFalse(member);
         orders.forEach(Order::delete);
         orderRepository.saveAll(orders);
 	}
