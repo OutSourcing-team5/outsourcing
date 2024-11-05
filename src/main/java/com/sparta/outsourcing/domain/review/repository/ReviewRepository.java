@@ -14,3 +14,4 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
 	Page<Review> findAllByStoreAndInactiveFalse(Store store, Pageable reviewPageable);
 }
+
