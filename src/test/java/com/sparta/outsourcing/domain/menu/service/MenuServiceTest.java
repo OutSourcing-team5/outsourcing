@@ -75,9 +75,6 @@ class MenuServiceTest {
 
 	@Test
 	void testMenuCreate() {
-		String menuName = menu.getMenuName();
-		int price = menu.getPrice();
-
 		assertEquals("pizza", menu.getMenuName());
 		assertEquals(10000, menu.getPrice());
 		assertFalse(menu.isInactive());
@@ -85,9 +82,6 @@ class MenuServiceTest {
 
 	@Test
 	void testMenuUpdate() {
-		String menuName = "chicken";
-		int price = 15000;
-
 		assertEquals("pizza", menu.getMenuName());
 		assertEquals(10000, menu.getPrice());
 	}
