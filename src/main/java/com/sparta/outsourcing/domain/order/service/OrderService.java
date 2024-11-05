@@ -48,6 +48,10 @@ public class OrderService {
 			throw new IllegalArgumentException("주문 가능 시간이 아닙니다.");
 		}
 
+		if(!store.isOpen()){
+			throw new IllegalArgumentException("해당 가게는 개인사정으로 문을 닫았습니다.");
+		}
+
 		Menu menu = menuRepository.findById(requestDto.getMenuId()).orElseThrow(
 			() -> new IllegalArgumentException("해당 메뉴를 찾을 수 없습니다.")
 		);
