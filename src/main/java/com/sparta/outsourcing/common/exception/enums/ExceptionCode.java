@@ -23,9 +23,10 @@ public enum ExceptionCode {
     SAME_BEFORE_PASSWORD(HttpStatus.UNAUTHORIZED, "변경된 비밀번호가 이전과 같습니다"),
 
     //----------가게----------
-    STORE_OUT_OF_BUSINESS(HttpStatus.BAD_REQUEST, "폐업한 가게입니다"),
+    STORE_OUT_OF_BUSINESS(HttpStatus.FORBIDDEN, "폐업한 가게입니다"),
     CANNOT_MODIFY_STORE_ID(HttpStatus.BAD_REQUEST, "가게 아이디는 수정할 수 없습니다"),
-    NOT_FOUND_STORE(HttpStatus.BAD_REQUEST, "해당 가게가 없습니다"),
+    NOT_FOUND_STORE(HttpStatus.NOT_FOUND, "해당 가게가 없습니다"),
+    CANNOT_EXCEED_STORE_LIMIT(HttpStatus.FORBIDDEN, "최대 가게 3개만 소유 가능합니다."),
 
     //----------메뉴----------
     NOT_FOUND_MENU(HttpStatus.BAD_REQUEST, "해당 메뉴가 없습니다"),
@@ -49,7 +50,7 @@ public enum ExceptionCode {
     REVIEW_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "동일한 주문에 대해 이미 리뷰가 작성되었습니다"),
 
     //권한
-    ONLY_OWNER_ALLOWED(HttpStatus.BAD_REQUEST, "사장님만 가능합니다"),
+    ONLY_OWNER_ALLOWED(HttpStatus.FORBIDDEN, "사장님만 가능합니다"),
     HAS_NOT_PERMISSION(HttpStatus.FORBIDDEN, "권한이 없습니다"),
     ROLE_REQUIRED(HttpStatus.BAD_REQUEST, "OWNER과 USER중 하나를 입력하세요"),
 

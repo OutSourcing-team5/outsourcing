@@ -1,5 +1,7 @@
 package com.sparta.outsourcing.domain.store.service;
 
+import static com.sparta.outsourcing.common.exception.enums.ExceptionCode.*;
+
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -9,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sparta.outsourcing.common.exception.customException.StoreExceptions;
 import com.sparta.outsourcing.domain.member.entity.Member;
 import com.sparta.outsourcing.domain.member.entity.MemberRole;
 import com.sparta.outsourcing.domain.member.repository.MemberRepository;
@@ -40,15 +43,15 @@ public class StoreService {
 
 	public StoreResponseDto createStore(StoreRequestDto requestDto, Long memberId) {
 		Member storeOwner = memberRepository.findById(memberId).orElseThrow(
-			() -> new IllegalArgumentException("해당하는 유저가 없습니다.")
+			() -> new StoreExceptions(NOT_FOUND_USER)
 		);
 
 		if (!storeOwner.getRole().equals(MemberRole.OWNER)) {
-			throw new IllegalArgumentException("사장님 권한 회원만 가게를 생성할 수 있습니다.");
+			throw new StoreExceptions(ONLY_OWNER_ALLOWED);
 		}
 
 		if (storeRepository.countAllByMemberAndInactiveFalse(storeOwner) == 3) {
-			throw new IllegalArgumentException("해당 사장님은 이미 3개의 가게를 소유하고 있습니다.");
+			throw new StoreExceptions(CANNOT_EXCEED_STORE_LIMIT);
 		}
 
 		Store store = Store.createOf(requestDto.getStoreName(), requestDto.getOpenTime(), requestDto.getCloseTime(), requestDto.getMinPrice(), storeOwner);
@@ -71,7 +74,7 @@ public class StoreService {
 
 	public DetailedStoreResponseDto getOneStore(Long storeId) {
 		Store store = storeRepository.findById(storeId).orElseThrow(
-			() -> new IllegalArgumentException("해당하는 가게가 없습니다.")
+			() -> new StoreExceptions(NOT_FOUND_STORE)
 		);
 
 		Pageable menuPageable = PageRequest.of(0, 5, Sort.by("modifiedAt").descending());
@@ -90,19 +93,19 @@ public class StoreService {
 	@Transactional
 	public StoreResponseDto updateStore(Long storeId, @Valid StoreUpdateRequestDto requestDto, Long memberId) {
 		Store store = storeRepository.findById(storeId).orElseThrow(
-			() -> new IllegalArgumentException("해당하는 가게가 없습니다.")
+			() -> new StoreExceptions(NOT_FOUND_STORE)
 		);
 
 		if (store.isInactive()) {
-			throw new IllegalArgumentException("폐업한 가게입니다.");
+			throw new StoreExceptions(STORE_OUT_OF_BUSINESS);
 		}
 
 		Member member = memberRepository.findById(memberId).orElseThrow(
-			() -> new IllegalArgumentException("해당하는 유저가 없습니다.")
+			() -> new StoreExceptions(NOT_FOUND_USER)
 		);
 
 		if (member.getId() != store.getMember().getId()) {
-			throw new IllegalArgumentException("가게의 사장님만 수정할 수 있습니다.");
+			throw new StoreExceptions(ONLY_OWNER_ALLOWED);
 		}
 
 		store.update(requestDto.getOpenTime(), requestDto.getCloseTime(), requestDto.getMinPrice(), requestDto.isOpened());
@@ -112,19 +115,19 @@ public class StoreService {
 
 	public void deleteStore(Long storeId, Long memberId) {
 		Store store = storeRepository.findById(storeId).orElseThrow(
-			() -> new IllegalArgumentException("해당하는 가게가 없습니다.")
+			() -> new StoreExceptions(NOT_FOUND_STORE)
 		);
 
 		if (store.isInactive()) {
-			throw new IllegalArgumentException("이미 폐업한 가게입니다.");
+			throw new StoreExceptions(STORE_OUT_OF_BUSINESS);
 		}
 
 		Member member = memberRepository.findById(memberId).orElseThrow(
-			() -> new IllegalArgumentException("해당하는 유저가 없습니다.")
+			() -> new StoreExceptions(NOT_FOUND_USER)
 		);
 
 		if (member.getId() != store.getMember().getId()) {
-			throw new IllegalArgumentException("가게의 사장님만 수정할 수 있습니다.");
+			throw new StoreExceptions(ONLY_OWNER_ALLOWED);
 		}
 
 		store.delete();
