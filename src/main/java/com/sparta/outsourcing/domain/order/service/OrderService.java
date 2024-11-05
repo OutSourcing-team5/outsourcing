@@ -64,7 +64,7 @@ public class OrderService {
 		}
 
 		if (menu.getPrice() < store.getMinPrice()) {
-			throw new OrderExceptions(MINIMUM_ORDER_AMOUNT_NOT);
+			throw new OrderExceptions(LOWER_THAN_MIN_ORDER);
 		}
 
 		Order order = Order.createOf(member, store, menu, requestDto.getCount());

@@ -34,19 +34,19 @@ public enum ExceptionCode {
     MENU_ALREADY_DELETED(HttpStatus.NOT_FOUND, "이미 삭제된 메뉴입니다"),
 
     //----------주문----------
-    STORE_CLOSED(HttpStatus.BAD_REQUEST, "영업 시간이 아닙니다"),
+    STORE_CLOSED(HttpStatus.GONE, "영업 시간이 아닙니다"),
     LOWER_THAN_MIN_ORDER(HttpStatus.BAD_REQUEST, "주문 금액이 최소 주문 금액보다 작습니다"),
     NOT_FOUND_ORDER(HttpStatus.NOT_FOUND, "해당 주문이 없습니다"),
-    CANNOT_CHANGE_TO_PENDING(HttpStatus.BAD_REQUEST, "대기 상태로 변경할 수 없습니다"),
-    ACCEPT_ONLY_PENDING(HttpStatus.BAD_REQUEST, "대기 상태일때만 수락 가능합니다"),
-    REJECTED_ONLY_PENDING(HttpStatus.BAD_REQUEST, "대기 상태일때만 거절 가능합니다"),
-    COMPLETED_ONLY_ACCEPT(HttpStatus.BAD_REQUEST, "수락 상태일때만 완료 가능합니다"),
-    ONLY_ORDER_ALLOWED(HttpStatus.BAD_REQUEST, "주문한 사람만 수정 가능합니다"),
-    CANCEL_ONLY_PENDING(HttpStatus.BAD_REQUEST, "대기 상태일때만 취소 가능합니다"),
-    ORDER_NOT_DELIVERED(HttpStatus.BAD_REQUEST, "주문이 배달 완료 상태가 아닙니다"),
-    STORE_CLOSED_BY_OWER(HttpStatus.BAD_REQUEST,"해당 가게는 개인사정으로 문을 닫았습니다"),
+
+    CANNOT_CHANGE_TO_PENDING(HttpStatus.FORBIDDEN, "대기 상태로 변경할 수 없습니다"),
+    ACCEPT_ONLY_PENDING(HttpStatus.FORBIDDEN, "대기 상태일때만 수락 가능합니다"),
+    REJECTED_ONLY_PENDING(HttpStatus.FORBIDDEN, "대기 상태일때만 거절 가능합니다"),
+    COMPLETED_ONLY_ACCEPT(HttpStatus.FORBIDDEN, "수락 상태일때만 완료 가능합니다"),
+    ONLY_ORDER_ALLOWED(HttpStatus.FORBIDDEN, "주문한 사람만 수정 가능합니다"),
+    CANCEL_ONLY_PENDING(HttpStatus.FORBIDDEN, "대기 상태일때만 취소 가능합니다"),
+    ORDER_NOT_DELIVERED(HttpStatus.FORBIDDEN, "주문이 배달 완료 상태가 아닙니다"),
+    STORE_CLOSED_BY_OWER(HttpStatus.GONE,"해당 가게는 개인사정으로 문을 닫았습니다"),
     NOT_ORDER_NOW(HttpStatus.BAD_REQUEST,"선택한 메뉴는 현재 주문할 수 없습니다."),
-    MINIMUM_ORDER_AMOUNT_NOT(HttpStatus.BAD_REQUEST,"최소 주문 금액을 충족하지 않습니다."),
     NOT_REJECTED_ACCEPT(HttpStatus.BAD_REQUEST,"완료된 주문은 취소할 수 없습니다."),
 
 
