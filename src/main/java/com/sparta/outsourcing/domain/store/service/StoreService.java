@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sparta.outsourcing.domain.member.entity.Member;
 import com.sparta.outsourcing.domain.member.entity.MemberRole;
@@ -86,6 +87,7 @@ public class StoreService {
 		);
 	}
 
+	@Transactional
 	public StoreResponseDto updateStore(Long storeId, @Valid StoreUpdateRequestDto requestDto, Long memberId) {
 		Store store = storeRepository.findById(storeId).orElseThrow(
 			() -> new IllegalArgumentException("해당하는 가게가 없습니다.")
