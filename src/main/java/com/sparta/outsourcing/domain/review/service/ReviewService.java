@@ -43,7 +43,8 @@ public class ReviewService {
 		if(!order.getMember().getId().equals(memberId)) {
 			throw new IllegalArgumentException("요청된 주문은 해당 멤버의 주문이 아닙니다.");
 		}
-		Review newReview = Review.createOf(requestDto.getRating());
+		Review newReview = Review.createReview(requestDto.getRating(), order);
+		reviewRepository.save(newReview);
 		return new ReviewResponseDto(newReview);
 	}
 
