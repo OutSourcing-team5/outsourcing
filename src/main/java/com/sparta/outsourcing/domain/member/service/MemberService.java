@@ -1,5 +1,7 @@
 package com.sparta.outsourcing.domain.member.service;
 
+import static com.sparta.outsourcing.common.exception.enums.ExceptionCode.*;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -8,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sparta.outsourcing.common.JwtUtil;
 import com.sparta.outsourcing.common.PasswordEncoder;
+import com.sparta.outsourcing.common.exception.customException.MemberExceptions;
 import com.sparta.outsourcing.domain.member.dto.DeleteMemberRequestDto;
 import com.sparta.outsourcing.domain.member.dto.LoginRequestDto;
 import com.sparta.outsourcing.domain.member.dto.MemberRequestDto;
@@ -42,7 +45,7 @@ public class MemberService {
         //email 중복확인
         Optional<Member> checkEmail = memberRepository.findByEmail(requestDto.getEmail());
         if (checkEmail.isPresent()) {
-            throw new IllegalArgumentException("중복된 Email 입니다.");
+            throw new MemberExceptions(DUPLICATE_EMAIL);
         }
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
         // 사용자 등록
@@ -56,10 +59,10 @@ public class MemberService {
         String email = requestDto.getEmail();
         String password = requestDto.getPassword();
         Member member = memberRepository.findByEmail(email).orElseThrow(() ->
-            new IllegalArgumentException("등록된 사용자가 없습니다.")
+            new MemberExceptions(NOT_FOUND_USER)
         );
         if (!this.passwordEncoder.matches(password, member.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new MemberExceptions(NOT_MATCH_PASSWORD);
         }
         String token = jwtUtil.createToken(member.getEmail());
         jwtUtil.addJwtToCookie(token, response);
@@ -67,15 +70,15 @@ public class MemberService {
 
 	public void deleteMember(DeleteMemberRequestDto requestDto, Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(
-            () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
+            () -> new MemberExceptions(NOT_FOUND_USER)
         );
 
         if (!passwordEncoder.matches(requestDto.getOldPassword(), member.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new MemberExceptions(NOT_MATCH_PASSWORD);
         }
 
         if (member.isInactive()) {
-            throw new IllegalArgumentException("이미 삭제된 회원입니다.");
+            throw new MemberExceptions(MEMBER_ALREADY_DELETED);
         }
 
         member.delete();
@@ -98,10 +101,10 @@ public class MemberService {
     @Transactional
     public void updateMember(UpdateMemberRequestDto requestDto, Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(
-            () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
+            () -> new MemberExceptions(NOT_FOUND_USER)
         );
         if (!passwordEncoder.matches(requestDto.getOldPassword(), member.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new MemberExceptions(NOT_MATCH_PASSWORD);
         }
 
         String encodedPassword = "";

@@ -11,16 +11,17 @@ public enum ExceptionCode {
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다"),
     NAME_TOO_LONG(HttpStatus.BAD_REQUEST, "이름은 최대 4글자까지 가능합니다"),
     USERNAME_REQUIRED(HttpStatus.BAD_REQUEST, "이름이 누락되었습니다"),
+    MEMBER_ALREADY_DELETED(HttpStatus.NOT_FOUND, "이미 삭제된 회원입니다"),
 
     //이메일
-    DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "해당 이메일이 존재합니다"),
+    DUPLICATE_EMAIL(HttpStatus.CONFLICT, "해당 이메일이 존재합니다"),
     EMAIL_REQUIRED(HttpStatus.BAD_REQUEST, "이메일이 누락되었습니다"),
     INVALID_EMAIL_FORMAT(HttpStatus.BAD_REQUEST, "유효하지 않은 이메일입니다"),
 
     //패스워드
     PASSWORD_REQUIRED(HttpStatus.BAD_REQUEST, "패스워드가 누락되었습니다"),
-    NOT_MATCH_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호가 맞지 않습니다"),
-    SAME_BEFORE_PASSWORD(HttpStatus.UNAUTHORIZED, "변경된 비밀번호가 이전과 같습니다"),
+    NOT_MATCH_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호가 맞지 않습니다"),
+    SAME_BEFORE_PASSWORD(HttpStatus.BAD_REQUEST, "변경된 비밀번호가 이전과 같습니다"),
 
     //----------가게----------
     STORE_OUT_OF_BUSINESS(HttpStatus.BAD_REQUEST, "폐업한 가게입니다"),
