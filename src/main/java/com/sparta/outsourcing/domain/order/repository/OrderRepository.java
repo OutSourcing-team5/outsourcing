@@ -8,5 +8,5 @@ import com.sparta.outsourcing.domain.member.entity.Member;
 import com.sparta.outsourcing.domain.order.entity.Order;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-	List<Order> findAllByMember(Member member);
+	List<Order> findAllByMemberAndDeleteFalse(Member member);
 }

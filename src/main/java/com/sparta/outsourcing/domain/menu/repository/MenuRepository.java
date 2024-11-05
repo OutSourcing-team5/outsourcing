@@ -10,6 +10,6 @@ import com.sparta.outsourcing.domain.menu.entity.Menu;
 import com.sparta.outsourcing.domain.store.entity.Store;
 
 public interface MenuRepository extends JpaRepository<Menu, Long> {
-	Page<Menu> findAllByStoreContaining(Store store, Pageable menuPageable);
-	List<Menu> findAllByStore(Store store);
+	Page<Menu> findAllByStoreAndDeleteFalse(Store store, Pageable menuPageable);
+	List<Menu> findAllByStoreAndDeleteFalse(Store store);
 }

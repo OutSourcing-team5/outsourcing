@@ -40,8 +40,11 @@ public class Review extends TimeStamped {
 	@JoinColumn(name = "orderId", nullable = false)
 	private Order order;
 
+	private boolean delete;
+
 	private Review(int rating) {
 		this.rating = rating;
+		this.delete = false;
 	}
 
 	public static Review createOf(int rating) {
