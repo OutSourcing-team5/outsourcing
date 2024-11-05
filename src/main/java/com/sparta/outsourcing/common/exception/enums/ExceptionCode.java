@@ -29,8 +29,8 @@ public enum ExceptionCode {
     CANNOT_EXCEED_STORE_LIMIT(HttpStatus.FORBIDDEN, "최대 가게 3개만 소유 가능합니다."),
 
     //----------메뉴----------
-    NOT_FOUND_MENU(HttpStatus.BAD_REQUEST, "해당 메뉴가 없습니다"),
-    MENU_ALREADY_DELETED(HttpStatus.BAD_REQUEST, "이미 삭제된 메뉴입니다"),
+    NOT_FOUND_MENU(HttpStatus.NOT_FOUND, "해당 메뉴가 없습니다"),
+    MENU_ALREADY_DELETED(HttpStatus.NOT_FOUND, "이미 삭제된 메뉴입니다"),
 
     //----------주문----------
     STORE_CLOSED(HttpStatus.BAD_REQUEST, "영업 시간이 아닙니다"),
