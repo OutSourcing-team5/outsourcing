@@ -10,7 +10,8 @@ import com.sparta.outsourcing.domain.member.entity.Member;
 import com.sparta.outsourcing.domain.store.entity.Store;
 
 public interface StoreRepository extends JpaRepository<Store, Long> {
-	int countAllByMemberAndIsDeletedFalse(Member storeOwner);
-	Page<Store> findAllByStoreNameContaining(String storeName, Pageable pageable);
-	List<Store> findAllByMember(Member member);
+	Page<Store> findAllByInactiveFalse(Pageable pageable);
+	List<Store> findAllByMemberAndInactiveFalse(Member member);
+	int countAllByMemberAndInactiveFalse(Member storeOwner);
+	Page<Store> findAllByStoreNameContainingAndInactiveFalse(String storeName, Pageable pageable);
 }

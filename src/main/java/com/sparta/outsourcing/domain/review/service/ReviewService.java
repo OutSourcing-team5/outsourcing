@@ -1,19 +1,20 @@
 package com.sparta.outsourcing.domain.review.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.sparta.outsourcing.domain.member.entity.Member;
 import com.sparta.outsourcing.domain.member.repository.MemberRepository;
 import com.sparta.outsourcing.domain.order.entity.Order;
 import com.sparta.outsourcing.domain.order.entity.OrderStatus;
 import com.sparta.outsourcing.domain.order.repository.OrderRepository;
+import com.sparta.outsourcing.domain.review.dto.ReviewDeleteRequestDto;
 import com.sparta.outsourcing.domain.review.dto.ReviewRequestDto;
 import com.sparta.outsourcing.domain.review.dto.ReviewResponseDto;
 import com.sparta.outsourcing.domain.review.dto.ReviewUpdateRequestDto;
 import com.sparta.outsourcing.domain.review.entity.Review;
 import com.sparta.outsourcing.domain.review.repository.ReviewRepository;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -59,5 +60,16 @@ public class ReviewService {
 		}
 		review.update(requestDto.getRating());
 		return new ReviewResponseDto(review);
+	}
+
+	@Transactional
+	public void deleteReview(Long reviewId, Long memberId) {
+		Review review = reviewRepository.findById(reviewId).orElseThrow(
+			() -> new IllegalArgumentException("해당 리뷰가 존재하지 않습니다."));
+
+		if(!review.getOrder().getMember().getId().equals(memberId)) {
+			throw new IllegalArgumentException("리뷰 삭제 권한이 없습니다.");
+		}
+		review.softDelete();
 	}
 }
