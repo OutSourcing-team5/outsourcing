@@ -26,6 +26,7 @@ public enum ExceptionCode {
     STORE_OUT_OF_BUSINESS(HttpStatus.BAD_REQUEST, "폐업한 가게입니다"),
     CANNOT_MODIFY_STORE_ID(HttpStatus.BAD_REQUEST, "가게 아이디는 수정할 수 없습니다"),
     NOT_FOUND_STORE(HttpStatus.BAD_REQUEST, "해당 가게가 없습니다"),
+    CANNOT_EXCEED_STORE_LIMIT(HttpStatus.BAD_REQUEST, "최대 가게 3개만 소유 가능합니다."),
 
     //----------메뉴----------
     NOT_FOUND_MENU(HttpStatus.BAD_REQUEST, "해당 메뉴가 없습니다"),
