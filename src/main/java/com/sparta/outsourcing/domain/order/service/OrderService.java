@@ -71,7 +71,7 @@ public class OrderService {
 			()-> new IllegalArgumentException("해당 주문을 찾을 수 없습니다.")
 		);
 		// 권한 확인
-		if (!order.getMember().getId().equals(memberId)) {
+		if (!order.getStore().getMember().getId().equals(memberId)) {
 			throw new IllegalArgumentException("권한이 없습니다.");
 		}
 
