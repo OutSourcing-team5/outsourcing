@@ -90,12 +90,12 @@ public class OrderService {
 		}
 
 		// 거절 상태로 바꾸는 요청: 대기가 아니면 언제나 예외처리
-		if (requestedStatus.equals("REJECTED") && currentStatus.equals("PENDING")) {
+		if (requestedStatus.equals("REJECTED") && !currentStatus.equals("PENDING")) {
 			throw new IllegalArgumentException("대기 상태가 아니면 거절 상태로 변경할 수 없습니다.");
 		}
 
 		//완료 상태로 바꾸는 요청: 수락이 아니면 언제나 예외처리
-		if (requestedStatus.equals("COMPLETED") && currentStatus.equals("ACCEPTED")) {
+		if (requestedStatus.equals("COMPLETED") && !currentStatus.equals("ACCEPTED")) {
 			throw new IllegalArgumentException("수락 상태가 아니면 완료 상태로 변경할 수 없습니다.");
 		}
 		// 상태 업데이트
