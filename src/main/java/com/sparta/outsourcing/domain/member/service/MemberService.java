@@ -72,9 +72,13 @@ public class MemberService {
 	}
 
 	public void deleteMember(DeleteMemberRequestDto requestDto, Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(
+        Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(
             () -> new MemberExceptions(NOT_FOUND_USER)
         );
+
+        if (!requestDto.getMemberId().equals(memberId)) {
+            throw new MemberExceptions(HAS_NOT_PERMISSION);
+        }
 
         if (!passwordEncoder.matches(requestDto.getOldPassword(), member.getPassword())) {
             throw new MemberExceptions(NOT_MATCH_PASSWORD);
@@ -103,9 +107,14 @@ public class MemberService {
 
     @Transactional
     public void updateMember(UpdateMemberRequestDto requestDto, Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(
+        Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(
             () -> new MemberExceptions(NOT_FOUND_USER)
         );
+
+        if (!requestDto.getMemberId().equals(memberId)) {
+            throw new MemberExceptions(HAS_NOT_PERMISSION);
+        }
+
         if (!passwordEncoder.matches(requestDto.getOldPassword(), member.getPassword())) {
             throw new MemberExceptions(NOT_MATCH_PASSWORD);
         }
@@ -114,6 +123,14 @@ public class MemberService {
 
         if (requestDto.getNewPassword() != null && !requestDto.getNewPassword().isEmpty()) {
             encodedPassword = passwordEncoder.encode(requestDto.getNewPassword());
+        }
+
+        if (requestDto.getUsername() == null || requestDto.getUsername().isEmpty()) {
+            throw new MemberExceptions(USERNAME_REQUIRED);
+        }
+
+        if (requestDto.getAddress() == null || requestDto.getAddress().isEmpty()) {
+            throw new MemberExceptions(ADDRESS_REQUIRED);
         }
 
         member.update(requestDto.getUsername(), encodedPassword, requestDto.getAddress());

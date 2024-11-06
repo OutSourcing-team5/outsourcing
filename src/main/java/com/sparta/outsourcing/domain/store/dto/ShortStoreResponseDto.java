@@ -1,5 +1,7 @@
 package com.sparta.outsourcing.domain.store.dto;
 
+import com.sparta.outsourcing.domain.store.entity.Store;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,8 +11,8 @@ public class ShortStoreResponseDto {
 	private Long id;
 	private String storeName;
 
-	public ShortStoreResponseDto(Long id, String storeName) {
-		this.id = id;
-		this.storeName = storeName;
+	public ShortStoreResponseDto(Store store) {
+		this.id = store.getId();
+		this.storeName = store.getStoreName();
 	}
 }

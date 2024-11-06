@@ -13,6 +13,7 @@ public enum ExceptionCode {
     USERNAME_REQUIRED(HttpStatus.BAD_REQUEST, "이름이 누락되었습니다"),
     MEMBER_ALREADY_DELETED(HttpStatus.NOT_FOUND, "이미 삭제된 회원입니다"),
     INVALID_POINT_VALUE(HttpStatus.NOT_FOUND, "0보다 큰 정수를 입력하세요"),
+    ADDRESS_REQUIRED(HttpStatus.BAD_REQUEST, "주소가 누락되었습니다"),
 
     //이메일
     DUPLICATE_EMAIL(HttpStatus.CONFLICT, "해당 이메일이 존재합니다"),
@@ -67,9 +68,9 @@ public enum ExceptionCode {
     HAS_NOT_PERMISSION(HttpStatus.FORBIDDEN, "권한이 없습니다"),
     ROLE_REQUIRED(HttpStatus.BAD_REQUEST, "OWNER과 USER중 하나를 입력하세요"),
 
-
-
-
+    //----------즐겨찾기----------
+    ALREADY_LIKE_EXISTS(HttpStatus.BAD_REQUEST, "이미 즐겨찾기한 가게입니다"),
+    NOT_FOUND_LIKE(HttpStatus.NOT_FOUND, "이미 즐겨찾기한 가게입니다"),
 
     //토큰
     NOT_VALID_TOKEN(HttpStatus.UNAUTHORIZED, "인증 토큰이 잘못되었거나 누락되었습니다"),
