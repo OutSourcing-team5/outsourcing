@@ -17,7 +17,9 @@ import com.sparta.outsourcing.domain.order.dto.OrderResponseDto;
 import com.sparta.outsourcing.domain.order.entity.Order;
 import com.sparta.outsourcing.domain.order.entity.OrderStatus;
 import com.sparta.outsourcing.domain.order.dto.OrderStatusRequestDto;
+import com.sparta.outsourcing.domain.order.entity.OrderStatusUpdate;
 import com.sparta.outsourcing.domain.order.repository.OrderRepository;
+import com.sparta.outsourcing.domain.order.repository.OrderStatusUpdateRepository;
 import com.sparta.outsourcing.domain.store.entity.Store;
 import com.sparta.outsourcing.domain.store.repository.StoreRepository;
 
@@ -31,6 +33,8 @@ public class OrderService {
 	private final MemberRepository memberRepository;
 	private final MenuRepository menuRepository;
 	private final StoreRepository storeRepository;
+	private final OrderStatusUpdateRepository orderStatusUpdateRepository;
+	private final OrderStatusUpdateService orderStatusUpdateService;
 
 	@Transactional
 	public OrderResponseDto createOrder(OrderRequestDto requestDto, Long memberId) {
@@ -51,7 +55,7 @@ public class OrderService {
 			throw new OrderExceptions(STORE_CLOSED);
 		}
 
-		if(!store.isOpen()){
+		if (!store.isOpen()) {
 			throw new OrderExceptions(STORE_CLOSED_BY_OWER);
 		}
 
@@ -83,7 +87,7 @@ public class OrderService {
 			() -> new OrderExceptions(NOT_FOUND_USER)
 		);
 		Order order = orderRepository.findById(statusRequestDto.getOrderId()).orElseThrow(
-			()-> new OrderExceptions(NOT_FOUND_MENU)
+			() -> new OrderExceptions(NOT_FOUND_MENU)
 		);
 		// 권한 확인
 		if (!order.getStore().getMember().getId().equals(memberId)) {
@@ -113,7 +117,6 @@ public class OrderService {
 		if (requestedStatus.equals("COMPLETED") && !currentStatus.equals("ACCEPTED")) {
 			throw new OrderExceptions(COMPLETED_ONLY_ACCEPT);
 		}
-
 		// 상태 업데이트
 		order.setStatus(OrderStatus.valueOf(requestedStatus));
 		orderRepository.save(order);
@@ -124,13 +127,26 @@ public class OrderService {
 			member.addPoints(order.getTotalPrice() * (0.03));
 		}
 
+		//주문 상태 변경 시 주문에 대한 요청과 정보를 담은 알림을 생성
+		OrderStatusUpdate notification = new OrderStatusUpdate(
+			order.getId(),
+			order.getMember().getId(),
+			requestedStatus
+		);
+		orderStatusUpdateRepository.save(notification);
+		orderStatusUpdateService.sendOrderStatusUpdateEmail(
+			statusRequestDto.getOrderId(),
+			requestedStatus,
+			order.getMember().getEmail()
+		);
+
 		// 업데이트된 주문 정보를 포함한 응답 반환
 		return new OrderResponseDto(order);
 	}
 
 	public void deleteOrder(Long orderId, Long memberId) {
 		Order order = orderRepository.findById(orderId).orElseThrow(()
-			->new OrderExceptions(NOT_FOUND_ORDER));
+			-> new OrderExceptions(NOT_FOUND_ORDER));
 
 		// 권한 확인 : 주문한 사용자만 취소할 수 있도록 설정
 		if (!order.getMember().getId().equals(memberId)) {
@@ -138,7 +154,7 @@ public class OrderService {
 		}
 
 		// 주문 상태가 완료되었는지 확인하고 완료된 주문은 취소 불가능하게 설정
-		if(order.getStatus() == OrderStatus.COMPLETED) {
+		if (order.getStatus() == OrderStatus.COMPLETED) {
 			throw new OrderExceptions(NOT_REJECTED_ACCEPT);
 		}
 		//소프트 삭제 수행
