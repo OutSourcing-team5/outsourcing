@@ -11,6 +11,7 @@ public class MenuResponseDto {
 	private long id;
 	private String menuName;
 	private int price;
+	private String category;
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
 
@@ -18,6 +19,7 @@ public class MenuResponseDto {
 		this.id = menu.getId();
 		this.menuName = menu.getMenuName();
 		this.price = menu.getPrice();
+		this.category = menu.getCategory();
 		this.createdAt = menu.getCreatedAt();
 		this.modifiedAt = menu.getModifiedAt();
 	}

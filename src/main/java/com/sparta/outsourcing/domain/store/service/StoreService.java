@@ -2,7 +2,10 @@ package com.sparta.outsourcing.domain.store.service;
 
 import static com.sparta.outsourcing.common.exception.enums.ExceptionCode.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sparta.outsourcing.common.exception.customException.StoreExceptions;
+import com.sparta.outsourcing.domain.like.repository.LikeRepository;
 import com.sparta.outsourcing.domain.member.entity.Member;
 import com.sparta.outsourcing.domain.member.entity.MemberRole;
 import com.sparta.outsourcing.domain.member.repository.MemberRepository;
@@ -21,6 +25,7 @@ import com.sparta.outsourcing.domain.menu.repository.MenuRepository;
 import com.sparta.outsourcing.domain.review.dto.ReviewResponseFromStoreDto;
 import com.sparta.outsourcing.domain.review.entity.Review;
 import com.sparta.outsourcing.domain.review.repository.ReviewRepository;
+import com.sparta.outsourcing.domain.store.dto.CategoryStoreResponseDto;
 import com.sparta.outsourcing.domain.store.dto.DetailedStoreResponseDto;
 import com.sparta.outsourcing.domain.store.dto.ShortStoreResponseDto;
 import com.sparta.outsourcing.domain.store.dto.StoreRequestDto;
@@ -40,6 +45,7 @@ public class StoreService {
 	private final MemberRepository memberRepository;
 	private final MenuRepository menuRepository;
 	private final ReviewRepository reviewRepository;
+	private final LikeRepository likeRepository;
 
 	public StoreResponseDto createStore(StoreRequestDto requestDto, Long memberId) {
 		Member storeOwner = memberRepository.findById(memberId).orElseThrow(
@@ -60,16 +66,36 @@ public class StoreService {
 		return new StoreResponseDto(savedStore);
 	}
 
-	public Page<ShortStoreResponseDto> getAllStoreByName(String storeName, int page) {
+	public List<ShortStoreResponseDto> getAllStoreByName(String storeName, int page, Long memberId) {
+		Member member = memberRepository.findById(memberId).orElseThrow(
+			() -> new StoreExceptions(NOT_FOUND_USER)
+		);
+
 		Pageable pageable = PageRequest.of(page, 5, Sort.by("modifiedAt").descending());
-		Page<Store> stores = storeRepository.findAllByStoreNameContainingAndInactiveFalse(storeName, pageable);
-		return stores.map(store -> new ShortStoreResponseDto(store.getId(), store.getStoreName()));
+
+		List<Store> likedStoresWithName = likeRepository.findStoresByMemberAndInactiveFalseAndStoreNameContainingOrderByModifiedAtDesc(member, storeName);
+		List<Long> likedStoresWithNameIds = likedStoresWithName.stream().map(Store::getId).toList();
+
+		Page<Store> generalStoresWithName = storeRepository.findAllByInactiveFalseAndStoreNameContainingAndIdNotIn(storeName, likedStoresWithNameIds, pageable);
+
+		return Stream.concat(likedStoresWithName.stream(), generalStoresWithName.getContent().stream())
+			.map(ShortStoreResponseDto::new).toList();
 	}
 
-	public Page<ShortStoreResponseDto> getAllStore(int page) {
+	public List<ShortStoreResponseDto> getAllStore(int page, Long memberId) {
+		Member member = memberRepository.findById(memberId).orElseThrow(
+			() -> new StoreExceptions(NOT_FOUND_USER)
+		);
+
 		Pageable pageable = PageRequest.of(page, 5, Sort.by("modifiedAt").descending());
-		Page<Store> stores = storeRepository.findAllByInactiveFalse(pageable);
-		return stores.map(store -> new ShortStoreResponseDto(store.getId(), store.getStoreName()));
+
+		List<Store> likedStores = likeRepository.findStoresByMemberAndInactiveFalseOrderByModifiedAtDesc(member);
+		List<Long> likedStoreIds = likedStores.stream().map(Store::getId).toList();
+
+		Page<Store> generalStores = storeRepository.findAllByInactiveFalseAndIdNotIn(likedStoreIds, pageable);
+
+		return Stream.concat(likedStores.stream(), generalStores.getContent().stream())
+			.map(ShortStoreResponseDto::new).toList();
 	}
 
 	public DetailedStoreResponseDto getOneStore(Long storeId) {
@@ -108,7 +134,7 @@ public class StoreService {
 			throw new StoreExceptions(ONLY_OWNER_ALLOWED);
 		}
 
-		store.update(requestDto.getOpenTime(), requestDto.getCloseTime(), requestDto.getMinPrice(), requestDto.isOpened());
+		store.update(requestDto.getOpenTime(), requestDto.getCloseTime(), requestDto.getMinPrice(), requestDto.isOpen());
 
 		return new StoreResponseDto(store);
 	}
@@ -135,5 +161,23 @@ public class StoreService {
 		List<Menu> menus = menuRepository.findAllByStoreAndInactiveFalse(store);
 		menus.forEach(Menu::delete);
 		menuRepository.saveAll(menus);
+	}
+
+	public CategoryStoreResponseDto getOneStoreCategory(Long storeId, String category) {
+		Store store = storeRepository.findById(storeId).orElseThrow(() -> new StoreExceptions(NOT_FOUND_STORE));
+
+		Pageable menuPageable = PageRequest.of(0, 5, Sort.by("modifiedAt").descending());
+		Page<Menu> menus = menuRepository.findAllByStoreAndCategoryAndInactiveFalse(store, category, menuPageable);
+		if(menus.isEmpty()) {
+			throw new StoreExceptions(NOT_FOUND_CATEGORY);
+		}
+
+		Pageable reviewPageable = PageRequest.of(0, 5, Sort.by("modifiedAt").descending());
+		Page<Review> reviews = reviewRepository.findAllByStoreAndInactiveFalse(store, reviewPageable);
+
+		return new CategoryStoreResponseDto(
+			store,
+			menus.map(MenuResponseFromStoreDto::new)
+		);
 	}
 }

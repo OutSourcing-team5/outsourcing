@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.sparta.outsourcing.domain.like.repository.LikeRepository;
 import com.sparta.outsourcing.domain.member.entity.Member;
 import com.sparta.outsourcing.domain.member.entity.MemberRole;
 import com.sparta.outsourcing.domain.member.repository.MemberRepository;
@@ -42,6 +43,9 @@ class StoreServiceTest {
 	@Mock
 	private ReviewRepository reviewRepository;
 
+	@Mock
+	private LikeRepository likeRepository;
+
 	@Test
 	@DisplayName("정상적인 가게 생성이 이루어집니다.")
 	void 가게생성_성공() {
@@ -57,7 +61,7 @@ class StoreServiceTest {
 		doReturn(Time.valueOf("21:30:00")).when(store).getCloseTime();
 		doReturn(10000).when(store).getMinPrice();
 
-		storeService = new StoreService(storeRepository, memberRepository, menuRepository, reviewRepository);
+		storeService = new StoreService(storeRepository, memberRepository, menuRepository, reviewRepository, likeRepository);
 
 		// stub
 		when(memberRepository.findById(1L)).thenReturn(Optional.of(owner));
