@@ -109,7 +109,7 @@ public class StoreService {
 			throw new StoreExceptions(ONLY_OWNER_ALLOWED);
 		}
 
-		store.update(requestDto.getOpenTime(), requestDto.getCloseTime(), requestDto.getMinPrice(), requestDto.isOpened());
+		store.update(requestDto.getOpenTime(), requestDto.getCloseTime(), requestDto.getMinPrice(), requestDto.isOpen());
 
 		return new StoreResponseDto(store);
 	}
