@@ -1,4 +1,4 @@
-package com.sparta.outsourcing.domain.order.repository;
+package com.sparta.outsourcing.domain.repository;
 
 import java.util.List;
 

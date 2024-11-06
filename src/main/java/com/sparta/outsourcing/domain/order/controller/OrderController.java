@@ -12,11 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sparta.outsourcing.domain.member.entity.Member;
 import com.sparta.outsourcing.domain.order.dto.OrderRequestDto;
 import com.sparta.outsourcing.domain.order.dto.OrderResponseDto;
 import com.sparta.outsourcing.domain.order.dto.OrderStatusRequestDto;
-import com.sparta.outsourcing.domain.order.entity.Order;
 import com.sparta.outsourcing.domain.order.service.OrderService;
 
 import lombok.RequiredArgsConstructor;
