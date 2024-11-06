@@ -7,6 +7,7 @@ import lombok.Getter;
 
 @Getter
 public class UpdateMemberRequestDto {
+	private Long memberId;
 	private String username;
 	@NotNull(message = "비밀번호를 입력하세요")
 	private String oldPassword;

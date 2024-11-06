@@ -75,6 +75,14 @@ public class GlobalExceptionHandler {
                 .body(makeResponseExceptionCode(exceptionCode));
     }
 
+    @ExceptionHandler(LikeExceptions.class)
+    public ResponseEntity<Object> handleLikeExceptions(LikeExceptions e) {
+        ExceptionCode exceptionCode = e.getExceptionCode();
+        log.error("{}: {}", exceptionCode, exceptionCode.getMessage());
+        return ResponseEntity.status(exceptionCode.getHttpStatus())
+            .body(makeResponseExceptionCode(exceptionCode));
+    }
+
     @ExceptionHandler(HasNotPermissionException.class)
     public ResponseEntity<Object> handleHasNotPermissionException(HasNotPermissionException e) {
         ExceptionCode exceptionCode = e.getExceptionCode();

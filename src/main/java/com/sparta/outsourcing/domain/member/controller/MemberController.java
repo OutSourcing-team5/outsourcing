@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -43,7 +44,7 @@ public class MemberController {
         memberService.login(requestDto, response);
     }
 
-    @DeleteMapping("/members/{memberId}")
+    @DeleteMapping("/members")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMember(
         @RequestBody DeleteMemberRequestDto requestDto,
@@ -52,7 +53,7 @@ public class MemberController {
         memberService.deleteMember(requestDto, memberId);
     }
 
-    @PutMapping("/members/{memberId}")
+    @PutMapping("/members")
     public void updateMember(
         @RequestBody @Valid UpdateMemberRequestDto requestDto,
         @RequestAttribute("id") Long memberId

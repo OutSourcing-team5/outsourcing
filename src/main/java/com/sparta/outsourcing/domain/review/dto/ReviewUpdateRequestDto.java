@@ -7,4 +7,8 @@ import lombok.Getter;
 public class ReviewUpdateRequestDto {
 	@NotNull(message = "숫자를 입력해주세요.")
 	private int rating;
+
+	public ReviewUpdateRequestDto(int rating) {
+		this.rating = rating;
+	}
 }

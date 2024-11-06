@@ -5,6 +5,7 @@ import java.sql.Time;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class StoreRequestDto {
@@ -19,4 +20,11 @@ public class StoreRequestDto {
 
 	@Positive(message = "최소 금액은 음수가 아닙니다.")
 	private int minPrice;
+
+	public StoreRequestDto(String storeName, Time openTime, Time closeTime, int minPrice) {
+		this.storeName = storeName;
+		this.openTime = openTime;
+		this.closeTime = closeTime;
+		this.minPrice = minPrice;
+	}
 }
