@@ -1,5 +1,8 @@
 package com.sparta.outsourcing.domain.store.controller;
 
+import java.util.List;
+
+import org.apache.coyote.Request;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,14 +46,15 @@ public class StoreController {
 	}
 
 	@GetMapping("")
-	public ResponseEntity<Page<ShortStoreResponseDto>> getStore(
+	public ResponseEntity<List<ShortStoreResponseDto>> getStore(
 		@RequestParam(required = false) String storeName,
-		@RequestParam(defaultValue = "0") int page
+		@RequestParam(defaultValue = "0") int page,
+		@RequestAttribute("id") Long memberId
 	) {
 		if (storeName != null && !storeName.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.OK).body(storeService.getAllStoreByName(storeName, page));
+			return ResponseEntity.status(HttpStatus.OK).body(storeService.getAllStoreByName(storeName, page, memberId));
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(storeService.getAllStore(page));
+		return ResponseEntity.status(HttpStatus.OK).body(storeService.getAllStore(page, memberId));
 	}
 
 
