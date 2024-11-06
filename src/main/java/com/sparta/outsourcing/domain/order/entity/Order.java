@@ -1,5 +1,7 @@
 package com.sparta.outsourcing.domain.order.entity;
 
+import java.time.LocalDateTime;
+
 import com.sparta.outsourcing.domain.TimeStamped;
 import com.sparta.outsourcing.domain.member.entity.Member;
 import com.sparta.outsourcing.domain.menu.entity.Menu;
@@ -53,6 +55,9 @@ public class Order extends TimeStamped {
 
 	@Column(nullable = false)
 	private int totalPrice;
+
+	@Column(nullable = false)
+	private String orderMonth;
 
 	// 주문 생성자: 필수 필드 초기화
 	private Order(Member member, Store store, Menu menu, int count) {

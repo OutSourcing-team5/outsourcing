@@ -1,11 +1,11 @@
 package com.sparta.outsourcing.domain.dashboard.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@NoArgsConstructor
+@AllArgsConstructor
 public class MonthlyResponseDto {
 	private int monthlyOrderCount;
 	private int monthlySalesCount;
