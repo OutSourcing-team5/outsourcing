@@ -2,6 +2,8 @@ package com.sparta.outsourcing.domain.store.service;
 
 import static com.sparta.outsourcing.common.exception.enums.ExceptionCode.*;
 
+import java.sql.Time;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -179,5 +182,21 @@ public class StoreService {
 		List<Menu> menus = menuRepository.findAllByStoreAndInactiveFalse(store);
 		menus.forEach(Menu::delete);
 		menuRepository.saveAll(menus);
+	}
+
+	// ========== 스케쥴러 ==========
+
+	@Scheduled(cron = "0 */10 * * * *")		// 10분마다 실행
+	public void updateStoreStatus() {
+		List<Store> stores = storeRepository.findAllByInactiveFalse();
+		LocalTime currentTime = LocalTime.now();
+
+		for (Store store : stores) {
+			Time openTime = store.getOpenTime();
+			Time closeTime = store.getCloseTime();
+
+			store.updateOpenStatus(currentTime.isAfter(openTime.toLocalTime()) && currentTime.isBefore(closeTime.toLocalTime()));
+			storeRepository.save(store);
+		}
 	}
 }

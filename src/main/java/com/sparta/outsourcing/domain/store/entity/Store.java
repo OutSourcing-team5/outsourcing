@@ -1,6 +1,7 @@
 package com.sparta.outsourcing.domain.store.entity;
 
 import java.sql.Time;
+import java.time.LocalTime;
 
 import com.sparta.outsourcing.domain.TimeStamped;
 import com.sparta.outsourcing.domain.member.entity.Member;
@@ -59,9 +60,11 @@ public class Store extends TimeStamped {
 		this.closeTime = closeTime;
 		this.minPrice = minPrice;
 		this.announcement = "공지사항을 입력해 주세요.";
-		this.open = true;
 		this.inactive = false;
 		this.member = member;
+
+		LocalTime currentTime = LocalTime.now();
+		this.open = currentTime.isAfter(openTime.toLocalTime()) && currentTime.isBefore(closeTime.toLocalTime());
 	}
 
 	public static Store createOf(String storeName, Time openTime, Time closeTime, int minPrice, Member member) {
@@ -85,5 +88,9 @@ public class Store extends TimeStamped {
 
 	public void deleteAnnouncement() {
 		this.announcement = "공지사항을 입력해 주세요.";
+	}
+
+	public void updateOpenStatus(boolean status) {
+		this.open = status;
 	}
 }
