@@ -51,9 +51,9 @@ public class OrderService {
 			throw new OrderExceptions(STORE_CLOSED);
 		}
 
-		// if(!store.isOpen()){
-		// 	throw new OrderExceptions(STORE_CLOSED_BY_OWER);
-		// }
+		if(!store.isOpen()){
+			throw new OrderExceptions(STORE_CLOSED_BY_OWER);
+		}
 
 		Menu menu = menuRepository.findById(requestDto.getMenuId()).orElseThrow(
 			() -> new OrderExceptions(NOT_FOUND_MENU)
@@ -63,6 +63,7 @@ public class OrderService {
 			throw new OrderExceptions(NOT_ORDER_NOW);
 		}
 
+		//주문 금액보다 적을 시
 		if (member.getPoints() < menu.getPrice()*requestDto.getCount() ) {
 			throw new OrderExceptions(INSUFFICIENT_POINTS);
 		}
