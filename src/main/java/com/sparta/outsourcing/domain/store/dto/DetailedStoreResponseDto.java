@@ -18,6 +18,8 @@ public class DetailedStoreResponseDto {
 	private String storeName;
 	private Time openTime;
 	private Time closeTime;
+	private int minPrice;
+	private String announcement;
 	private String createdAt;
 	private String modifiedAt;
 	private Page<MenuResponseFromStoreDto> menus;
@@ -28,6 +30,8 @@ public class DetailedStoreResponseDto {
 		this.storeName = store.getStoreName();
 		this.openTime = store.getOpenTime();
 		this.closeTime = store.getCloseTime();
+		this.minPrice = store.getMinPrice();
+		this.announcement = store.getAnnouncement();
 		this.createdAt = store.getCreatedAt().toString();
 		this.modifiedAt = store.getModifiedAt().toString();
 		this.menus = menus;

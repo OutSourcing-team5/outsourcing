@@ -116,6 +116,24 @@ public class StoreService {
 		);
 	}
 
+	public CategoryStoreResponseDto getOneStoreCategory(Long storeId, String category) {
+		Store store = storeRepository.findById(storeId).orElseThrow(() -> new StoreExceptions(NOT_FOUND_STORE));
+
+		Pageable menuPageable = PageRequest.of(0, 5, Sort.by("modifiedAt").descending());
+		Page<Menu> menus = menuRepository.findAllByStoreAndCategoryAndInactiveFalse(store, category, menuPageable);
+		if(menus.isEmpty()) {
+			throw new StoreExceptions(NOT_FOUND_CATEGORY);
+		}
+
+		Pageable reviewPageable = PageRequest.of(0, 5, Sort.by("modifiedAt").descending());
+		Page<Review> reviews = reviewRepository.findAllByStoreAndInactiveFalse(store, reviewPageable);
+
+		return new CategoryStoreResponseDto(
+			store,
+			menus.map(MenuResponseFromStoreDto::new)
+		);
+	}
+
 	@Transactional
 	public StoreResponseDto updateStore(Long storeId, @Valid StoreUpdateRequestDto requestDto, Long memberId) {
 		Store store = storeRepository.findById(storeId).orElseThrow(
@@ -161,23 +179,5 @@ public class StoreService {
 		List<Menu> menus = menuRepository.findAllByStoreAndInactiveFalse(store);
 		menus.forEach(Menu::delete);
 		menuRepository.saveAll(menus);
-	}
-
-	public CategoryStoreResponseDto getOneStoreCategory(Long storeId, String category) {
-		Store store = storeRepository.findById(storeId).orElseThrow(() -> new StoreExceptions(NOT_FOUND_STORE));
-
-		Pageable menuPageable = PageRequest.of(0, 5, Sort.by("modifiedAt").descending());
-		Page<Menu> menus = menuRepository.findAllByStoreAndCategoryAndInactiveFalse(store, category, menuPageable);
-		if(menus.isEmpty()) {
-			throw new StoreExceptions(NOT_FOUND_CATEGORY);
-		}
-
-		Pageable reviewPageable = PageRequest.of(0, 5, Sort.by("modifiedAt").descending());
-		Page<Review> reviews = reviewRepository.findAllByStoreAndInactiveFalse(store, reviewPageable);
-
-		return new CategoryStoreResponseDto(
-			store,
-			menus.map(MenuResponseFromStoreDto::new)
-		);
 	}
 }

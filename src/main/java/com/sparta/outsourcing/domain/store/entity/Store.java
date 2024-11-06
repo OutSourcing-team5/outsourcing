@@ -39,6 +39,9 @@ public class Store extends TimeStamped {
 	private int minPrice;
 
 	@Column(nullable = false)
+	private String announcement;
+
+	@Column(nullable = false)
 	private boolean open;
 
 	@Column(nullable = false)
@@ -55,6 +58,7 @@ public class Store extends TimeStamped {
 		this.openTime = openTime;
 		this.closeTime = closeTime;
 		this.minPrice = minPrice;
+		this.announcement = "공지사항을 입력해 주세요.";
 		this.open = true;
 		this.inactive = false;
 		this.member = member;
@@ -73,5 +77,13 @@ public class Store extends TimeStamped {
 
 	public void delete() {
 		this.inactive = true;
+	}
+
+	public void updateAnnouncement(String announcement) {
+		this.announcement = announcement;
+	}
+
+	public void deleteAnnouncement() {
+		this.announcement = "공지사항을 입력해 주세요.";
 	}
 }
