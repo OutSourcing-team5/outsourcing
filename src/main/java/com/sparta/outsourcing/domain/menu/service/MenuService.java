@@ -35,7 +35,7 @@ public class MenuService {
 			throw new MenuExceptions(STORE_OUT_OF_BUSINESS);
 		}
 
-		Menu menu = Menu.createOf(menuRequestDto.getMenuName(), menuRequestDto.getPrice(), store);
+		Menu menu = Menu.createOf(menuRequestDto.getMenuName(), menuRequestDto.getPrice(), store, menuRequestDto.getCategory());
 		return new MenuResponseDto(menuRepository.save(menu));
 	}
 
@@ -60,7 +60,7 @@ public class MenuService {
 			throw new MenuExceptions(MENU_ALREADY_DELETED);
 		}
 
-		menu.update(menuRequestDto.getMenuName(), menuRequestDto.getPrice());
+		menu.update(menuRequestDto.getMenuName(), menuRequestDto.getPrice(), menuRequestDto.getCategory());
 		return new MenuResponseDto(menuRepository.save(menu));
 	}
 

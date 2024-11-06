@@ -13,4 +13,7 @@ public class MenuRequestDto {
 
 	@NotNull(message = "storeId는 필수 입력 항목입니다.")
 	private Long storeId;
+
+	@NotNull(message = "category 필수 입력 항목입니다.")
+	private String category;
 }
