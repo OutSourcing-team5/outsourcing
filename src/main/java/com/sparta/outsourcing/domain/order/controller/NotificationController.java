@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sparta.outsourcing.domain.order.dto.OrderStatusUpdateDto;
 import com.sparta.outsourcing.domain.order.entity.OrderStatusUpdate;
 import com.sparta.outsourcing.domain.order.repository.OrderStatusUpdateRepository;
+import com.sparta.outsourcing.domain.order.service.NotificationService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,14 +20,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/notifications")
 public class NotificationController {
-	private final OrderStatusUpdateRepository orderStatusUpdateRepository;
+	private final NotificationService notificationService;
 
 	@GetMapping
 	public ResponseEntity<List<OrderStatusUpdateDto>> getNotification(@RequestAttribute("id") Long memberId) {
-		List<OrderStatusUpdate> updates = orderStatusUpdateRepository.findAllByMemberIdOrderByCreatedAtDesc(memberId);
-		List<OrderStatusUpdateDto> response = updates.stream()
-			.map(OrderStatusUpdateDto::new)
-			.collect(Collectors.toList());
+		List<OrderStatusUpdateDto> response = notificationService.getNotification(memberId);
 		return ResponseEntity.ok(response);
 	}
 }
