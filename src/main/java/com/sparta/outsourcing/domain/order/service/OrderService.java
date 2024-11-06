@@ -4,6 +4,8 @@ import static com.sparta.outsourcing.common.exception.enums.ExceptionCode.*;
 
 import java.sql.Time;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -11,7 +13,9 @@ import com.sparta.outsourcing.common.exception.customException.OrderExceptions;
 import com.sparta.outsourcing.domain.member.entity.Member;
 import com.sparta.outsourcing.domain.member.repository.MemberRepository;
 import com.sparta.outsourcing.domain.menu.entity.Menu;
+import com.sparta.outsourcing.domain.menu.entity.Option;
 import com.sparta.outsourcing.domain.menu.repository.MenuRepository;
+import com.sparta.outsourcing.domain.menu.repository.OptionRepository;
 import com.sparta.outsourcing.domain.order.dto.OrderRequestDto;
 import com.sparta.outsourcing.domain.order.dto.OrderResponseDto;
 import com.sparta.outsourcing.domain.order.entity.Order;
@@ -31,6 +35,7 @@ public class OrderService {
 	private final MemberRepository memberRepository;
 	private final MenuRepository menuRepository;
 	private final StoreRepository storeRepository;
+	private final OptionRepository optionRepository;
 
 	@Transactional
 	public OrderResponseDto createOrder(OrderRequestDto requestDto, Long memberId) {
@@ -63,8 +68,32 @@ public class OrderService {
 			throw new OrderExceptions(NOT_ORDER_NOW);
 		}
 
+		for (int i = 0; i < requestDto.getOptionIds().size(); i++) {
+			Long optionId = requestDto.getOptionIds().get(i);  // 인덱스를 사용하여 optionId 접근
+			Option option = optionRepository.findById(optionId).orElseThrow(
+				() -> new OrderExceptions(NOT_FOUND_OPTION)
+			);
+		}
+
+		List<Option> options = new ArrayList<>();
+		int totalOptionPrice = 0;
+		if (requestDto.getOptionIds() != null && !requestDto.getOptionIds().isEmpty()) {
+			for (int i = 0; i < requestDto.getOptionIds().size(); i++) {
+				Long optionId = requestDto.getOptionIds().get(i);  // 인덱스를 사용하여 optionId 접근
+				Option option = optionRepository.findById(optionId).orElseThrow(
+					() -> new OrderExceptions(NOT_FOUND_OPTION)
+				);
+
+				if (!menu.getMenuOptions().stream().anyMatch(menuOption -> menuOption.getOption().equals(option))) {
+					throw new OrderExceptions(OPTION_NOT_BELONG_TO_MENU);
+				}
+
+				totalOptionPrice += option.getOptionPrice();
+			}
+		}
+
 		//주문 금액보다 적을 시
-		if (member.getPoints() < menu.getPrice()*requestDto.getCount() ) {
+		if (member.getPoints() < (menu.getPrice()+totalOptionPrice)*requestDto.getCount() ) {
 			throw new OrderExceptions(INSUFFICIENT_POINTS);
 		}
 
@@ -72,7 +101,7 @@ public class OrderService {
 			throw new OrderExceptions(LOWER_THAN_MIN_ORDER);
 		}
 
-		Order order = Order.createOf(member, store, menu, requestDto.getCount());
+		Order order = Order.createOf(member, store, menu, requestDto.getCount(), totalOptionPrice);
 		orderRepository.save(order);
 
 		return new OrderResponseDto(order);

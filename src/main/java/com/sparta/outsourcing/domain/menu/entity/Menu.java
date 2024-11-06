@@ -1,5 +1,8 @@
 package com.sparta.outsourcing.domain.menu.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.sparta.outsourcing.domain.TimeStamped;
 import com.sparta.outsourcing.domain.store.entity.Store;
 
@@ -11,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -41,6 +45,9 @@ public class Menu extends TimeStamped {
 
 	@Column(nullable = false)
 	private String category;
+
+	@OneToMany(mappedBy = "menu")
+	private List<MenuOption> menuOptions = new ArrayList<>();
 
 	private Menu(String menuName, int price, Store store, String category) {
 		this.menuName = menuName;

@@ -34,6 +34,9 @@ public enum ExceptionCode {
     NOT_FOUND_MENU(HttpStatus.NOT_FOUND, "해당 메뉴가 없습니다"),
     MENU_ALREADY_DELETED(HttpStatus.NOT_FOUND, "이미 삭제된 메뉴입니다"),
     NOT_FOUND_CATEGORY(HttpStatus.NOT_FOUND, "해당 카테고리가 없습니다"),
+    NOT_FOUND_OPTION(HttpStatus.NOT_FOUND, "해당 옵션이 없습니다"),
+    OPTION_NOT_BELONG_TO_MENU(HttpStatus.NOT_FOUND, "해당 옵션은 선택한 메뉴에 포함되어 있지 않습니다"),
+
 
     //----------주문----------
     STORE_CLOSED(HttpStatus.GONE, "영업 시간이 아닙니다"),
@@ -75,7 +78,7 @@ public enum ExceptionCode {
     NOT_SUPPORT_ENCODING_COOKIE(HttpStatus.BAD_REQUEST, "Not support encoding cookie"),
     HAS_NOT_TOKEN(HttpStatus.BAD_REQUEST, "Request has not token"),
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "Token is expired"),
-    NOT_SUPPORT_TOKEN(HttpStatus.UNAUTHORIZED, "Is not support token"),
+    NOT_SUPPORT_TOKEN(HttpStatus.UNAUTHORIZED, "Is not support token")
     ;
 
     private final HttpStatus httpStatus;
