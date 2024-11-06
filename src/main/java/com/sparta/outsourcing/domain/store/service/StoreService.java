@@ -55,9 +55,9 @@ public class StoreService {
 		}
 
 		Store store = Store.createOf(requestDto.getStoreName(), requestDto.getOpenTime(), requestDto.getCloseTime(), requestDto.getMinPrice(), storeOwner);
-		storeRepository.save(store);
+		Store savedStore = storeRepository.save(store);
 
-		return new StoreResponseDto(store);
+		return new StoreResponseDto(savedStore);
 	}
 
 	public Page<ShortStoreResponseDto> getAllStoreByName(String storeName, int page) {
