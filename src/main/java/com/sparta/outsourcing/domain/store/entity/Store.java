@@ -57,7 +57,7 @@ public class Store extends TimeStamped {
 		this.openTime = openTime;
 		this.closeTime = closeTime;
 		this.minPrice = minPrice;
-		this.open = false;
+		this.open = true;
 		this.inactive = false;
 		this.member = member;
 	}
