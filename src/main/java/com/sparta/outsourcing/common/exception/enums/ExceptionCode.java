@@ -12,6 +12,7 @@ public enum ExceptionCode {
     NAME_TOO_LONG(HttpStatus.BAD_REQUEST, "이름은 최대 4글자까지 가능합니다"),
     USERNAME_REQUIRED(HttpStatus.BAD_REQUEST, "이름이 누락되었습니다"),
     MEMBER_ALREADY_DELETED(HttpStatus.NOT_FOUND, "이미 삭제된 회원입니다"),
+    ADDRESS_REQUIRED(HttpStatus.BAD_REQUEST, "주소가 누락되었습니다"),
 
     //이메일
     DUPLICATE_EMAIL(HttpStatus.CONFLICT, "해당 이메일이 존재합니다"),
