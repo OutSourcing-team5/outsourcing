@@ -65,15 +65,9 @@ public class Member extends TimeStamped {
 	}
 
 	public void update(String username, String password, String address) {
-		if (username != null && !username.isEmpty()) {
-			this.username = username;
-		}
-		if (password != null && !password.isEmpty()) {
-			this.password = password;
-		}
-		if (address != null && !(address.isEmpty())) {
-			this.address = address;
-		}
+		this.username = username;
+		this.password = password;
+		this.address = address;
 	}
 
 	public void addPoints(double points) {
