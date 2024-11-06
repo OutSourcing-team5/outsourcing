@@ -52,7 +52,7 @@ public class MemberService {
         }
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
         // 사용자 등록
-        Member member = Member.createOf(requestDto.getUsername(), encodedPassword, requestDto.getEmail(), requestDto.getAddress(), requestDto.getRole(), 0);
+        Member member = Member.createOf(requestDto.getUsername(), encodedPassword, requestDto.getEmail(), requestDto.getAddress(), requestDto.getRole());
         memberRepository.save(member);
 
         return new MemberResponseDto(member);

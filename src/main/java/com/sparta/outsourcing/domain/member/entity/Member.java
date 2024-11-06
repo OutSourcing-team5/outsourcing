@@ -46,18 +46,18 @@ public class Member extends TimeStamped {
 	@Column(nullable = false)
 	private boolean inactive;
 
-	private Member(String username, String password, String email, String address, MemberRole role, double points) {
+	private Member(String username, String password, String email, String address, MemberRole role) {
 		this.username = username;
 		this.password = password;
 		this.email = email;
 		this.address = address;
 		this.role = role;
 		this.inactive = false;
-		this.points = points;
+		this.points = 0;
 	}
 
-	public static Member createOf(String username, String password, String email, String address, MemberRole role, double points) {
-		return new Member(username, password, email, address, role, points);
+	public static Member createOf(String username, String password, String email, String address, MemberRole role) {
+		return new Member(username, password, email, address, role);
 	}
 
 	public void delete() {
