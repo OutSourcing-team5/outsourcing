@@ -72,7 +72,6 @@ public class OrderService {
 			throw new OrderExceptions(NOT_ORDER_NOW);
 		}
 
-		List<Option> options = new ArrayList<>();
 		int totalOptionPrice = 0;
 		if (requestDto.getOptionIds() != null && !requestDto.getOptionIds().isEmpty()) {
 			for (int i = 0; i < requestDto.getOptionIds().size(); i++) {

@@ -38,7 +38,6 @@ public class OptionService {
 		Option option = Option.createOf(optionRequestDto.getOptionName(), optionRequestDto.getOptionPrice());
 		optionRepository.save(option);
 
-		// 메뉴와 옵션을 연결
 		MenuOption menuOption = MenuOption.createOf(menu, option, optionRequestDto.getOptionPrice());
 		menuOptionRepository.save(menuOption);
 
