@@ -21,6 +21,7 @@ import com.sparta.outsourcing.domain.menu.repository.MenuRepository;
 import com.sparta.outsourcing.domain.review.dto.ReviewResponseFromStoreDto;
 import com.sparta.outsourcing.domain.review.entity.Review;
 import com.sparta.outsourcing.domain.review.repository.ReviewRepository;
+import com.sparta.outsourcing.domain.store.dto.CategoryStoreResponseDto;
 import com.sparta.outsourcing.domain.store.dto.DetailedStoreResponseDto;
 import com.sparta.outsourcing.domain.store.dto.ShortStoreResponseDto;
 import com.sparta.outsourcing.domain.store.dto.StoreRequestDto;
@@ -137,7 +138,7 @@ public class StoreService {
 		menuRepository.saveAll(menus);
 	}
 
-	public DetailedStoreResponseDto getOneStoreCategory(Long storeId, String category) {
+	public CategoryStoreResponseDto getOneStoreCategory(Long storeId, String category) {
 		Store store = storeRepository.findById(storeId).orElseThrow(() -> new StoreExceptions(NOT_FOUND_STORE));
 
 		Pageable menuPageable = PageRequest.of(0, 5, Sort.by("modifiedAt").descending());
@@ -149,10 +150,9 @@ public class StoreService {
 		Pageable reviewPageable = PageRequest.of(0, 5, Sort.by("modifiedAt").descending());
 		Page<Review> reviews = reviewRepository.findAllByStoreAndInactiveFalse(store, reviewPageable);
 
-		return new DetailedStoreResponseDto(
+		return new CategoryStoreResponseDto(
 			store,
-			menus.map(MenuResponseFromStoreDto::new),
-			reviews.map(ReviewResponseFromStoreDto::new)
+			menus.map(MenuResponseFromStoreDto::new)
 		);
 	}
 }

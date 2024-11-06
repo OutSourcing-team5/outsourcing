@@ -42,7 +42,7 @@ public class Menu extends TimeStamped {
 	@Column(nullable = false)
 	private String category;
 
-	public Menu(String menuName, int price, Store store, String category) {
+	private Menu(String menuName, int price, Store store, String category) {
 		this.menuName = menuName;
 		this.price = price;
 		this.inactive = false;
