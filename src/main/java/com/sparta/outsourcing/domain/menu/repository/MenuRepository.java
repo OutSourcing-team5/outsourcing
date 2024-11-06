@@ -12,4 +12,5 @@ import com.sparta.outsourcing.domain.store.entity.Store;
 public interface MenuRepository extends JpaRepository<Menu, Long> {
 	Page<Menu> findAllByStoreAndInactiveFalse(Store store, Pageable menuPageable);
 	List<Menu> findAllByStoreAndInactiveFalse(Store store);
+	Page<Menu> findAllByStoreAndCategoryAndInactiveFalse(Store store, String category, Pageable menuPageable);
 }

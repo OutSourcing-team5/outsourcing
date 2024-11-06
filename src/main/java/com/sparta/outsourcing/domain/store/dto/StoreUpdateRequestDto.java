@@ -17,5 +17,5 @@ public class StoreUpdateRequestDto {
 	@Positive(message = "최소 금액은 음수가 아닙니다.")
 	private int minPrice;
 
-	private boolean isOpened;
+	private boolean open;
 }

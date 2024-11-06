@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sparta.outsourcing.domain.store.dto.CategoryStoreResponseDto;
 import com.sparta.outsourcing.domain.store.dto.DetailedStoreResponseDto;
 import com.sparta.outsourcing.domain.store.dto.ShortStoreResponseDto;
 import com.sparta.outsourcing.domain.store.dto.StoreRequestDto;
@@ -52,11 +53,20 @@ public class StoreController {
 		return ResponseEntity.status(HttpStatus.OK).body(storeService.getAllStore(page));
 	}
 
+
 	@GetMapping("/{storeId}")
 	public ResponseEntity<DetailedStoreResponseDto> getOneStore(
 		@PathVariable Long storeId
 	) {
 		return ResponseEntity.status(HttpStatus.OK).body(storeService.getOneStore(storeId));
+	}
+
+	@GetMapping("/{storeId}/category")
+	public ResponseEntity<CategoryStoreResponseDto> getOneStoreCategory(
+		@PathVariable Long storeId,
+		@RequestParam(required = false) String category
+	) {
+		return ResponseEntity.status(HttpStatus.OK).body(storeService.getOneStoreCategory(storeId, category));
 	}
 
 	@PutMapping("/{storeId}")

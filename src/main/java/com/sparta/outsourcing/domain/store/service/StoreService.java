@@ -21,6 +21,7 @@ import com.sparta.outsourcing.domain.menu.repository.MenuRepository;
 import com.sparta.outsourcing.domain.review.dto.ReviewResponseFromStoreDto;
 import com.sparta.outsourcing.domain.review.entity.Review;
 import com.sparta.outsourcing.domain.review.repository.ReviewRepository;
+import com.sparta.outsourcing.domain.store.dto.CategoryStoreResponseDto;
 import com.sparta.outsourcing.domain.store.dto.DetailedStoreResponseDto;
 import com.sparta.outsourcing.domain.store.dto.ShortStoreResponseDto;
 import com.sparta.outsourcing.domain.store.dto.StoreRequestDto;
@@ -108,7 +109,7 @@ public class StoreService {
 			throw new StoreExceptions(ONLY_OWNER_ALLOWED);
 		}
 
-		store.update(requestDto.getOpenTime(), requestDto.getCloseTime(), requestDto.getMinPrice(), requestDto.isOpened());
+		store.update(requestDto.getOpenTime(), requestDto.getCloseTime(), requestDto.getMinPrice(), requestDto.isOpen());
 
 		return new StoreResponseDto(store);
 	}
@@ -135,5 +136,23 @@ public class StoreService {
 		List<Menu> menus = menuRepository.findAllByStoreAndInactiveFalse(store);
 		menus.forEach(Menu::delete);
 		menuRepository.saveAll(menus);
+	}
+
+	public CategoryStoreResponseDto getOneStoreCategory(Long storeId, String category) {
+		Store store = storeRepository.findById(storeId).orElseThrow(() -> new StoreExceptions(NOT_FOUND_STORE));
+
+		Pageable menuPageable = PageRequest.of(0, 5, Sort.by("modifiedAt").descending());
+		Page<Menu> menus = menuRepository.findAllByStoreAndCategoryAndInactiveFalse(store, category, menuPageable);
+		if(menus.isEmpty()) {
+			throw new StoreExceptions(NOT_FOUND_CATEGORY);
+		}
+
+		Pageable reviewPageable = PageRequest.of(0, 5, Sort.by("modifiedAt").descending());
+		Page<Review> reviews = reviewRepository.findAllByStoreAndInactiveFalse(store, reviewPageable);
+
+		return new CategoryStoreResponseDto(
+			store,
+			menus.map(MenuResponseFromStoreDto::new)
+		);
 	}
 }
