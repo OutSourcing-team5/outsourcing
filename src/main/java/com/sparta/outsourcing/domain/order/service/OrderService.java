@@ -81,6 +81,7 @@ public class OrderService {
 
 		return new OrderResponseDto(order);
 	}
+
 	@Transactional
 	public OrderResponseDto updateOrderStatus(OrderStatusRequestDto statusRequestDto, Long memberId) {
 		Member member = memberRepository.findById(memberId).orElseThrow(
