@@ -72,18 +72,11 @@ public class OrderService {
 			throw new OrderExceptions(NOT_ORDER_NOW);
 		}
 
-		for (int i = 0; i < requestDto.getOptionIds().size(); i++) {
-			Long optionId = requestDto.getOptionIds().get(i);  // 인덱스를 사용하여 optionId 접근
-			Option option = optionRepository.findById(optionId).orElseThrow(
-				() -> new OrderExceptions(NOT_FOUND_OPTION)
-			);
-		}
-
 		List<Option> options = new ArrayList<>();
 		int totalOptionPrice = 0;
 		if (requestDto.getOptionIds() != null && !requestDto.getOptionIds().isEmpty()) {
 			for (int i = 0; i < requestDto.getOptionIds().size(); i++) {
-				Long optionId = requestDto.getOptionIds().get(i);  // 인덱스를 사용하여 optionId 접근
+				Long optionId = requestDto.getOptionIds().get(i);
 				Option option = optionRepository.findById(optionId).orElseThrow(
 					() -> new OrderExceptions(NOT_FOUND_OPTION)
 				);
