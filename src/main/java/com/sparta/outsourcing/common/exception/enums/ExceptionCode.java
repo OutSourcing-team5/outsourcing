@@ -32,6 +32,7 @@ public enum ExceptionCode {
     //----------메뉴----------
     NOT_FOUND_MENU(HttpStatus.NOT_FOUND, "해당 메뉴가 없습니다"),
     MENU_ALREADY_DELETED(HttpStatus.NOT_FOUND, "이미 삭제된 메뉴입니다"),
+    NOT_FOUND_CATEGORY(HttpStatus.NOT_FOUND, "해당 카테고리가 없습니다"),
 
     //----------주문----------
     STORE_CLOSED(HttpStatus.GONE, "영업 시간이 아닙니다"),

@@ -39,20 +39,25 @@ public class Menu extends TimeStamped {
 	@JoinColumn(name = "storeId", nullable = false)
 	private Store store;
 
-	public Menu(String menuName, int price, Store store) {
+	@Column(nullable = false)
+	private String category;
+
+	public Menu(String menuName, int price, Store store, String category) {
 		this.menuName = menuName;
 		this.price = price;
 		this.inactive = false;
 		this.store = store;
+		this.category = category;
 	}
 
-	public static Menu createOf(String menuName, int price, Store store) {
-		return new Menu(menuName, price, store);
+	public static Menu createOf(String menuName, int price, Store store, String category) {
+		return new Menu(menuName, price, store, category);
 	}
 
-	public void update(String menuName, int price) {
+	public void update(String menuName, int price, String category) {
 		this.menuName = menuName;
 		this.price = price;
+		this.category = category;
 	}
 
 	public void delete() {

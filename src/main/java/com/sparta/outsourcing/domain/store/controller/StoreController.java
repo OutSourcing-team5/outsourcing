@@ -52,11 +52,20 @@ public class StoreController {
 		return ResponseEntity.status(HttpStatus.OK).body(storeService.getAllStore(page));
 	}
 
+
 	@GetMapping("/{storeId}")
 	public ResponseEntity<DetailedStoreResponseDto> getOneStore(
 		@PathVariable Long storeId
 	) {
 		return ResponseEntity.status(HttpStatus.OK).body(storeService.getOneStore(storeId));
+	}
+
+	@GetMapping("/{storeId}/category")
+	public ResponseEntity<DetailedStoreResponseDto> getOneStoreCategory(
+		@PathVariable Long storeId,
+		@RequestParam(required = false) String category
+	) {
+		return ResponseEntity.status(HttpStatus.OK).body(storeService.getOneStoreCategory(storeId, category));
 	}
 
 	@PutMapping("/{storeId}")

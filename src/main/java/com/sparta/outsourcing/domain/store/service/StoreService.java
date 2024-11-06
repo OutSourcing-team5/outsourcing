@@ -136,4 +136,23 @@ public class StoreService {
 		menus.forEach(Menu::delete);
 		menuRepository.saveAll(menus);
 	}
+
+	public DetailedStoreResponseDto getOneStoreCategory(Long storeId, String category) {
+		Store store = storeRepository.findById(storeId).orElseThrow(() -> new StoreExceptions(NOT_FOUND_STORE));
+
+		Pageable menuPageable = PageRequest.of(0, 5, Sort.by("modifiedAt").descending());
+		Page<Menu> menus = menuRepository.findAllByStoreAndCategoryAndInactiveFalse(store, category, menuPageable);
+		if(menus.isEmpty()) {
+			throw new StoreExceptions(NOT_FOUND_CATEGORY);
+		}
+
+		Pageable reviewPageable = PageRequest.of(0, 5, Sort.by("modifiedAt").descending());
+		Page<Review> reviews = reviewRepository.findAllByStoreAndInactiveFalse(store, reviewPageable);
+
+		return new DetailedStoreResponseDto(
+			store,
+			menus.map(MenuResponseFromStoreDto::new),
+			reviews.map(ReviewResponseFromStoreDto::new)
+		);
+	}
 }
