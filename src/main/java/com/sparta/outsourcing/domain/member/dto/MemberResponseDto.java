@@ -12,6 +12,7 @@ public class MemberResponseDto {
     private Long id;
     private String username;
     private String email;
+    private double points;
     private String createdAt;
     private String modifiedAt;
 
@@ -19,6 +20,7 @@ public class MemberResponseDto {
         this.id = savedMember.getId();
         this.username = savedMember.getUsername();
         this.email = savedMember.getEmail();
+        this.points = savedMember.getPoints();
         this.createdAt = savedMember.getCreatedAt().toString();
         this.modifiedAt = savedMember.getModifiedAt().toString();
     }
