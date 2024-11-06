@@ -1,11 +1,13 @@
 package com.sparta.outsourcing.domain.member.controller;
 
 import com.sparta.outsourcing.common.filter.AuthFilter;
+import com.sparta.outsourcing.domain.member.dto.AddPointsRequestDto;
 import com.sparta.outsourcing.domain.member.dto.DeleteMemberRequestDto;
 import com.sparta.outsourcing.domain.member.dto.LoginRequestDto;
 import com.sparta.outsourcing.domain.member.dto.MemberRequestDto;
 import com.sparta.outsourcing.domain.member.dto.MemberResponseDto;
 import com.sparta.outsourcing.domain.member.dto.UpdateMemberRequestDto;
+import com.sparta.outsourcing.domain.member.entity.Member;
 import com.sparta.outsourcing.domain.member.service.MemberService;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -56,5 +58,13 @@ public class MemberController {
         @RequestAttribute("id") Long memberId
     ) {
         memberService.updateMember(requestDto, memberId);
+    }
+
+    @PutMapping("/members/points")
+    public ResponseEntity<MemberResponseDto> addPoints(
+        @RequestBody @Valid AddPointsRequestDto requestDto,
+        @RequestAttribute("id") Long currentMemberId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(memberService.addPoints(requestDto, currentMemberId));
     }
 }

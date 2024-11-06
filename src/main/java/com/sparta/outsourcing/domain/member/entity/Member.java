@@ -41,12 +41,12 @@ public class Member extends TimeStamped {
 	private MemberRole role;
 
 	@Column(nullable = false)
-	private int points;
+	private double points;
 
 	@Column(nullable = false)
 	private boolean inactive;
 
-	private Member(String username, String password, String email, String address, MemberRole role, int points) {
+	private Member(String username, String password, String email, String address, MemberRole role, double points) {
 		this.username = username;
 		this.password = password;
 		this.email = email;
@@ -56,7 +56,7 @@ public class Member extends TimeStamped {
 		this.points = points;
 	}
 
-	public static Member createOf(String username, String password, String email, String address, MemberRole role, int points) {
+	public static Member createOf(String username, String password, String email, String address, MemberRole role, double points) {
 		return new Member(username, password, email, address, role, points);
 	}
 
@@ -68,11 +68,15 @@ public class Member extends TimeStamped {
 		if (username != null && !username.isEmpty()) {
 			this.username = username;
 		}
-		if (password != null && !username.isEmpty()) {
+		if (password != null && !password.isEmpty()) {
 			this.password = password;
 		}
-		if (address != null && !username.isEmpty()) {
+		if (address != null && !(address.isEmpty())) {
 			this.address = address;
 		}
+	}
+
+	public void addPoints(double points) {
+		this.points += points;
 	}
 }

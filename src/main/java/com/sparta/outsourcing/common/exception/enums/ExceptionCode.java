@@ -12,6 +12,7 @@ public enum ExceptionCode {
     NAME_TOO_LONG(HttpStatus.BAD_REQUEST, "이름은 최대 4글자까지 가능합니다"),
     USERNAME_REQUIRED(HttpStatus.BAD_REQUEST, "이름이 누락되었습니다"),
     MEMBER_ALREADY_DELETED(HttpStatus.NOT_FOUND, "이미 삭제된 회원입니다"),
+    INVALID_POINT_VALUE(HttpStatus.NOT_FOUND, "0보다 큰 정수를 입력하세요"),
 
     //이메일
     DUPLICATE_EMAIL(HttpStatus.CONFLICT, "해당 이메일이 존재합니다"),
@@ -36,6 +37,7 @@ public enum ExceptionCode {
     //----------주문----------
     STORE_CLOSED(HttpStatus.GONE, "영업 시간이 아닙니다"),
     LOWER_THAN_MIN_ORDER(HttpStatus.BAD_REQUEST, "주문 금액이 최소 주문 금액보다 작습니다"),
+    INSUFFICIENT_POINTS(HttpStatus.BAD_REQUEST, "포인트가 부족합니다"),
     NOT_FOUND_ORDER(HttpStatus.NOT_FOUND, "해당 주문이 없습니다"),
 
     CANNOT_CHANGE_TO_PENDING(HttpStatus.FORBIDDEN, "대기 상태로 변경할 수 없습니다"),

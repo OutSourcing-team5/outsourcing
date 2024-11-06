@@ -5,12 +5,14 @@ import static com.sparta.outsourcing.common.exception.enums.ExceptionCode.*;
 import java.util.List;
 import java.util.Optional;
 
+import org.antlr.v4.runtime.ParserInterpreter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sparta.outsourcing.common.JwtUtil;
 import com.sparta.outsourcing.common.PasswordEncoder;
 import com.sparta.outsourcing.common.exception.customException.MemberExceptions;
+import com.sparta.outsourcing.domain.member.dto.AddPointsRequestDto;
 import com.sparta.outsourcing.domain.member.dto.DeleteMemberRequestDto;
 import com.sparta.outsourcing.domain.member.dto.LoginRequestDto;
 import com.sparta.outsourcing.domain.member.dto.MemberRequestDto;
@@ -26,6 +28,7 @@ import com.sparta.outsourcing.domain.store.entity.Store;
 import com.sparta.outsourcing.domain.store.repository.StoreRepository;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -115,5 +118,25 @@ public class MemberService {
 
         member.update(requestDto.getUsername(), encodedPassword, requestDto.getAddress());
         memberRepository.save(member);
+    }
+
+    public MemberResponseDto addPoints(@Valid AddPointsRequestDto requestDto, Long currentMemberId) {
+        Member member = memberRepository.findById(currentMemberId)
+            .orElseThrow(() -> new MemberExceptions(NOT_FOUND_USER));
+
+        double points=0;
+        try {
+            points = Integer.parseInt(requestDto.getPoints());
+            if(points < 0 ) {
+                throw new MemberExceptions(INVALID_POINT_VALUE);
+            }
+        }
+        catch (NumberFormatException e) {
+            throw new MemberExceptions(INVALID_POINT_VALUE);
+        }
+
+        member.addPoints(points);
+        memberRepository.save(member);
+        return new MemberResponseDto(member);
     }
 }
