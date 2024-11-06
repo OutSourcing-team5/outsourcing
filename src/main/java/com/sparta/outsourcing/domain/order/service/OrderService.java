@@ -63,6 +63,11 @@ public class OrderService {
 			throw new OrderExceptions(NOT_ORDER_NOW);
 		}
 
+		//주문 금액보다 적을 시
+		if (member.getPoints() < menu.getPrice()*requestDto.getCount() ) {
+			throw new OrderExceptions(INSUFFICIENT_POINTS);
+		}
+
 		if (menu.getPrice() < store.getMinPrice()) {
 			throw new OrderExceptions(LOWER_THAN_MIN_ORDER);
 		}
@@ -74,6 +79,9 @@ public class OrderService {
 	}
 	@Transactional
 	public OrderResponseDto updateOrderStatus(OrderStatusRequestDto statusRequestDto, Long memberId) {
+		Member member = memberRepository.findById(memberId).orElseThrow(
+			() -> new OrderExceptions(NOT_FOUND_USER)
+		);
 		Order order = orderRepository.findById(statusRequestDto.getOrderId()).orElseThrow(
 			()-> new OrderExceptions(NOT_FOUND_MENU)
 		);
@@ -105,9 +113,16 @@ public class OrderService {
 		if (requestedStatus.equals("COMPLETED") && !currentStatus.equals("ACCEPTED")) {
 			throw new OrderExceptions(COMPLETED_ONLY_ACCEPT);
 		}
+
 		// 상태 업데이트
 		order.setStatus(OrderStatus.valueOf(requestedStatus));
 		orderRepository.save(order);
+
+		//완료 상태면 포인트 차감하고 구매건에 대한 포인트 추가
+		if (order.getStatus().name().equals("COMPLETED")) {
+			member.addPoints(-order.getTotalPrice());
+			member.addPoints(order.getTotalPrice() * (0.03));
+		}
 
 		// 업데이트된 주문 정보를 포함한 응답 반환
 		return new OrderResponseDto(order);
