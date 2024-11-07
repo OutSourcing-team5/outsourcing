@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sparta.outsourcing.common.exception.customException.StoreExceptions;
+import com.sparta.outsourcing.domain.advertisement.repository.AdvertisementRepository;
 import com.sparta.outsourcing.domain.like.repository.LikeRepository;
 import com.sparta.outsourcing.domain.member.entity.Member;
 import com.sparta.outsourcing.domain.member.entity.MemberRole;
@@ -49,6 +50,7 @@ public class StoreService {
 	private final MenuRepository menuRepository;
 	private final ReviewRepository reviewRepository;
 	private final LikeRepository likeRepository;
+	private final AdvertisementRepository advertisementRepository;
 
 	public StoreResponseDto createStore(StoreRequestDto requestDto, Long memberId) {
 		Member storeOwner = memberRepository.findById(memberId).orElseThrow(
@@ -76,6 +78,7 @@ public class StoreService {
 
 		Pageable pageable = PageRequest.of(page, 5, Sort.by("modifiedAt").descending());
 
+		List<Store> advertisedStoresWithName = advertisementRepository.findStoresByStoreNameContainingAndInactiveFalse(storeName);
 		// 즐겨찾기한 가게 중 이름이 일치하는 가게 리스트 조회
 		List<Store> likedStoresWithName = likeRepository.findStoresByMemberAndInactiveFalseAndStoreNameContainingOrderByModifiedAtDesc(member, storeName);
 
@@ -88,7 +91,6 @@ public class StoreService {
 			// 즐겨찾기한 가게가 있으면 일반 가게와 합쳐서 반환
 			List<Long> likedStoresWithNameIds = likedStoresWithName.stream().map(Store::getId).toList();
 			Page<Store> generalStoresWithName = storeRepository.findAllByInactiveFalseAndStoreNameContainingAndIdNotIn(storeName, likedStoresWithNameIds, pageable);
-
 			combinedStores = Stream.concat(likedStoresWithName.stream(), generalStoresWithName.getContent().stream()).toList();
 		}
 
@@ -104,6 +106,7 @@ public class StoreService {
 
 		Pageable pageable = PageRequest.of(page, 5, Sort.by("modifiedAt").descending());
 
+		List<Store> advertisedStores = advertisementRepository.findAllByInactiveFalse();
 		// 즐겨찾기 가게 리스트 조회
 		List<Store> likedStores = likeRepository.findStoresByMemberAndInactiveFalseOrderByModifiedAtDesc(member);
 
