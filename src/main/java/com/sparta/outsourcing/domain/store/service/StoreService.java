@@ -78,6 +78,7 @@ public class StoreService {
 
 		Pageable pageable = PageRequest.of(page, 5, Sort.by("modifiedAt").descending());
 
+		// 광고된 가게는 즐겨찾기와 일반가게와 상관없이 맨위에 항상 조회
 		List<Store> advertisedStoresWithName = advertisementRepository.findStoresByStoreNameContainingAndInactiveFalse(storeName);
 		// 즐겨찾기한 가게 중 이름이 일치하는 가게 리스트 조회
 		List<Store> likedStoresWithName = likeRepository.findStoresByMemberAndInactiveFalseAndStoreNameContainingOrderByModifiedAtDesc(member, storeName);
@@ -94,9 +95,10 @@ public class StoreService {
 			combinedStores = Stream.concat(likedStoresWithName.stream(), generalStoresWithName.getContent().stream()).toList();
 		}
 
-		return combinedStores.stream()
-			.map(ShortStoreResponseDto::new)
-			.toList();
+		return Stream.concat(
+			advertisedStoresWithName.stream().map(store -> new ShortStoreResponseDto(store, true)), // 광고된 가게는 isAdvertisement = true
+			combinedStores.stream().map(store -> new ShortStoreResponseDto(store, false))
+		).toList();
 	}
 
 	public List<ShortStoreResponseDto> getAllStore(int page, Long memberId) {
@@ -123,9 +125,11 @@ public class StoreService {
 			combinedStores = Stream.concat(likedStores.stream(), generalStores.getContent().stream()).toList();
 		}
 
-		return combinedStores.stream()
-			.map(ShortStoreResponseDto::new)
-			.toList();
+		// 광고된 가게 + 즐겨찾기 가게 + 일반 가게 순으로 반환
+		return Stream.concat(
+			advertisedStores.stream().map(store -> new ShortStoreResponseDto(store, true)), // 광고된 가게는 isAdvertisement = true
+			combinedStores.stream().map(store -> new ShortStoreResponseDto(store, false))
+		).toList();
 	}
 
 	public DetailedStoreResponseDto getOneStore(Long storeId) {
