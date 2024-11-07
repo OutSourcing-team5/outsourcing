@@ -76,13 +76,25 @@ public class StoreService {
 
 		Pageable pageable = PageRequest.of(page, 5, Sort.by("modifiedAt").descending());
 
+		// 즐겨찾기한 가게 중 이름이 일치하는 가게 리스트 조회
 		List<Store> likedStoresWithName = likeRepository.findStoresByMemberAndInactiveFalseAndStoreNameContainingOrderByModifiedAtDesc(member, storeName);
-		List<Long> likedStoresWithNameIds = likedStoresWithName.stream().map(Store::getId).toList();
 
-		Page<Store> generalStoresWithName = storeRepository.findAllByInactiveFalseAndStoreNameContainingAndIdNotIn(storeName, likedStoresWithNameIds, pageable);
+		List<Store> combinedStores;
+		if (likedStoresWithName.isEmpty()) {
+			// 즐겨찾기한 가게가 없으면 전체 가게 중 이름이 일치하는 가게를 페이지네이션하여 조회
+			Page<Store> allStoresWithName = storeRepository.findAllByInactiveFalseAndStoreNameContaining(storeName, pageable);
+			combinedStores = allStoresWithName.getContent();
+		} else {
+			// 즐겨찾기한 가게가 있으면 일반 가게와 합쳐서 반환
+			List<Long> likedStoresWithNameIds = likedStoresWithName.stream().map(Store::getId).toList();
+			Page<Store> generalStoresWithName = storeRepository.findAllByInactiveFalseAndStoreNameContainingAndIdNotIn(storeName, likedStoresWithNameIds, pageable);
 
-		return Stream.concat(likedStoresWithName.stream(), generalStoresWithName.getContent().stream())
-			.map(ShortStoreResponseDto::new).toList();
+			combinedStores = Stream.concat(likedStoresWithName.stream(), generalStoresWithName.getContent().stream()).toList();
+		}
+
+		return combinedStores.stream()
+			.map(ShortStoreResponseDto::new)
+			.toList();
 	}
 
 	public List<ShortStoreResponseDto> getAllStore(int page, Long memberId) {
@@ -92,13 +104,25 @@ public class StoreService {
 
 		Pageable pageable = PageRequest.of(page, 5, Sort.by("modifiedAt").descending());
 
+		// 즐겨찾기 가게 리스트 조회
 		List<Store> likedStores = likeRepository.findStoresByMemberAndInactiveFalseOrderByModifiedAtDesc(member);
-		List<Long> likedStoreIds = likedStores.stream().map(Store::getId).toList();
 
-		Page<Store> generalStores = storeRepository.findAllByInactiveFalseAndIdNotIn(likedStoreIds, pageable);
+		List<Store> combinedStores;
+		if (likedStores.isEmpty()) {
+			// 즐겨찾기한 가게가 없으면 전체 가게를 페이지네이션하여 조회
+			Page<Store> allStores = storeRepository.findAllByInactiveFalse(pageable);
+			combinedStores = allStores.getContent();
+		} else {
+			// 즐겨찾기한 가게가 있으면 일반 가게와 합쳐서 반환
+			List<Long> likedStoreIds = likedStores.stream().map(Store::getId).toList();
+			Page<Store> generalStores = storeRepository.findAllByInactiveFalseAndIdNotIn(likedStoreIds, pageable);
 
-		return Stream.concat(likedStores.stream(), generalStores.getContent().stream())
-			.map(ShortStoreResponseDto::new).toList();
+			combinedStores = Stream.concat(likedStores.stream(), generalStores.getContent().stream()).toList();
+		}
+
+		return combinedStores.stream()
+			.map(ShortStoreResponseDto::new)
+			.toList();
 	}
 
 	public DetailedStoreResponseDto getOneStore(Long storeId) {
@@ -186,7 +210,8 @@ public class StoreService {
 
 	// ========== 스케쥴러 ==========
 
-	@Scheduled(cron = "0 */10 * * * *")		// 10분마다 실행
+	// @Scheduled(cron = "0 */10 * * * *")		// 10분마다 실행
+	@Scheduled(cron = "*/10 * * * * *")
 	public void updateStoreStatus() {
 		List<Store> stores = storeRepository.findAllByInactiveFalse();
 		LocalTime currentTime = LocalTime.now();
