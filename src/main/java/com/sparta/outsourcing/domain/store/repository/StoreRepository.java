@@ -14,4 +14,7 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
 	int countAllByMemberAndInactiveFalse(Member storeOwner);
 	Page<Store> findAllByInactiveFalseAndIdNotIn(List<Long> likedStoreIds, Pageable pageable);
 	Page<Store> findAllByInactiveFalseAndStoreNameContainingAndIdNotIn(String storeName, List<Long> likedStoresWithNameIds, Pageable pageable);
+	List<Store> findAllByInactiveFalse();
+	Page<Store> findAllByInactiveFalse(Pageable pageable);
+	Page<Store> findAllByInactiveFalseAndStoreNameContaining(String storeName, Pageable pageable);
 }
