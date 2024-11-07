@@ -218,7 +218,7 @@ public class StoreService {
 	// ========== 스케쥴러 ==========
 
 	// @Scheduled(cron = "0 */10 * * * *")		// 10분마다 실행
-	@Scheduled(cron = "*/10 * * * * *")
+	@Scheduled(cron = "0 */10 * * * *")
 	public void updateStoreStatus() {
 		List<Store> stores = storeRepository.findAllByInactiveFalse();
 		LocalTime currentTime = LocalTime.now();
