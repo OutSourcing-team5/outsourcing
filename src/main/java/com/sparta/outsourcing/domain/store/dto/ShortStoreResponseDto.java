@@ -11,8 +11,8 @@ public class ShortStoreResponseDto {
 	private Long id;
 	private String storeName;
 
-	public ShortStoreResponseDto(Store store) {
+	public ShortStoreResponseDto(Store store, boolean isAdvertisement) {
 		this.id = store.getId();
-		this.storeName = store.getStoreName();
+		this.storeName = isAdvertisement ? store.getStoreName() + "[Advertisement]" : store.getStoreName();
 	}
 }

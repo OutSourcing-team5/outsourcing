@@ -72,6 +72,10 @@ public enum ExceptionCode {
     ALREADY_LIKE_EXISTS(HttpStatus.BAD_REQUEST, "이미 즐겨찾기한 가게입니다"),
     NOT_FOUND_LIKE(HttpStatus.NOT_FOUND, "이미 즐겨찾기한 가게입니다"),
 
+    //광고등록
+    ALREADY_ADVERTISEMENT_EXISTS(HttpStatus.BAD_REQUEST, "이미 광고등록이 된 가게입니다."),
+    NOT_FOUND_ADVERTISEMENT(HttpStatus.NOT_FOUND, "이미 광고등록이 된 가게입니다."),
+
     //토큰
     NOT_VALID_TOKEN(HttpStatus.UNAUTHORIZED, "인증 토큰이 잘못되었거나 누락되었습니다"),
 
